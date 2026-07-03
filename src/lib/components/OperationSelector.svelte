@@ -1,0 +1,81 @@
+<script module lang="ts">
+	export type Mode = 'ADD' | 'SUBTRACT' | 'MULTIPLY' | 'NEGATE' | 'INCREMENT' | 'DECREMENT';
+
+	export const MODES: { id: Mode; label: string }[] = [
+		{ id: 'ADD', label: 'ADD' },
+		{ id: 'SUBTRACT', label: 'SUB' },
+		{ id: 'MULTIPLY', label: 'MUL' },
+		{ id: 'NEGATE', label: 'NEG' },
+		{ id: 'INCREMENT', label: 'INC' },
+		{ id: 'DECREMENT', label: 'DEC' }
+	];
+
+	/** Modes that read only Input A — Input B is unused and gets visually muted. */
+	export const UNARY_MODES: ReadonlySet<Mode> = new Set(['NEGATE', 'INCREMENT', 'DECREMENT']);
+</script>
+
+<script lang="ts">
+	interface Props {
+		value: Mode;
+	}
+
+	let { value = $bindable() }: Props = $props();
+</script>
+
+<div class="selector" role="radiogroup" aria-label="Operation mode">
+	{#each MODES as m (m.id)}
+		<button
+			type="button"
+			role="radio"
+			aria-checked={value === m.id}
+			class="option"
+			class:active={value === m.id}
+			onclick={() => (value = m.id)}
+		>
+			{m.label}
+		</button>
+	{/each}
+</div>
+
+<style>
+	.selector {
+		display: flex;
+		gap: 0.4rem;
+		flex-wrap: wrap;
+	}
+
+	.option {
+		appearance: none;
+		border: 1px solid var(--line);
+		background: var(--panel-1);
+		color: var(--label);
+		font-family: var(--font-label);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.75rem;
+		padding: 0.4rem 0.75rem;
+		border-radius: 2px;
+		cursor: pointer;
+		transition:
+			background-color 160ms var(--ease-settle),
+			color 160ms var(--ease-settle),
+			border-color 160ms var(--ease-settle);
+	}
+
+	.option:hover {
+		color: var(--text);
+		border-color: var(--edge);
+	}
+
+	.option.active {
+		background: var(--panel-2);
+		color: var(--text);
+		border-color: var(--text);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.option {
+			transition: none;
+		}
+	}
+</style>

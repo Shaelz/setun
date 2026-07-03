@@ -8,24 +8,40 @@
 		label: string;
 		/** Small engraved power-of-three label shown under the control, e.g. "3⁴". */
 		positionLabel?: string;
+		/** Fully inactive: dimmed, ignores input. For static/demo swatches. */
 		disabled?: boolean;
+		/** Displays a live value the user can't edit directly (e.g. a computed
+		 * result awaiting RESULT → A) — unlike `disabled`, stays at full
+		 * brightness rather than dimming. */
+		readonly?: boolean;
+		/** Boosts brightness/glow — for the result register, which AESTHETIC.md
+		 * calls out as "more luminous... as if actively computed." */
+		emphasized?: boolean;
 	}
 
-	let { value = $bindable(0), label, positionLabel = '', disabled = false }: Props = $props();
+	let {
+		value = $bindable(0),
+		label,
+		positionLabel = '',
+		disabled = false,
+		readonly = false,
+		emphasized = false
+	}: Props = $props();
 
 	const POSITIONS: Trit[] = [-1, 0, 1];
 	const SYMBOL: Record<Trit, string> = { [-1]: '−', 0: '0', 1: '+' };
 	const WORD: Record<Trit, string> = { [-1]: 'negative one', 0: 'zero', 1: 'positive one' };
 
+	let interactive = $derived(!disabled && !readonly);
 	let rootEl: HTMLDivElement;
 
 	function set(next: Trit) {
-		if (disabled) return;
+		if (!interactive) return;
 		value = next;
 	}
 
 	function onkeydown(event: KeyboardEvent) {
-		if (disabled) return;
+		if (!interactive) return;
 		switch (event.key) {
 			case 'ArrowLeft':
 				set(Math.max(-1, value - 1) as Trit);
@@ -67,6 +83,8 @@
 		bind:this={rootEl}
 		class="control"
 		class:disabled
+		class:readonly
+		class:emphasized
 		role="slider"
 		aria-label={label}
 		aria-orientation="horizontal"
@@ -75,7 +93,8 @@
 		aria-valuenow={value}
 		aria-valuetext={WORD[value]}
 		aria-disabled={disabled}
-		tabindex={disabled ? -1 : 0}
+		aria-readonly={readonly}
+		tabindex={interactive ? 0 : -1}
 		{onkeydown}
 	>
 		<span class="corner corner-tl" aria-hidden="true"></span>
@@ -112,6 +131,7 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 0.3rem;
+		flex-shrink: 0;
 	}
 
 	.control {
@@ -162,7 +182,8 @@
 			transform 80ms var(--ease-settle);
 	}
 
-	.control.disabled .cell {
+	.control.disabled .cell,
+	.control.readonly .cell {
 		cursor: default;
 	}
 
@@ -184,13 +205,23 @@
 		box-shadow: inset 0 0 8px color-mix(in srgb, currentColor 35%, transparent);
 	}
 
-	.control:not(.disabled) .cell:hover:not(.selected) {
+	.control:not(.disabled):not(.readonly) .cell:hover:not(.selected) {
 		opacity: 0.85;
 		background: color-mix(in srgb, currentColor 10%, transparent);
 	}
 
-	.control:not(.disabled) .cell:active {
+	.control:not(.disabled):not(.readonly) .cell:active {
 		transform: scale(0.94);
+	}
+
+	/* Result register reads as "actively computed": brighter at rest, and a
+	   stronger halo when lit, rather than looking merely inactive. */
+	.control.emphasized .cell:not(.selected) {
+		opacity: 0.8;
+	}
+
+	.control.emphasized .cell.selected {
+		box-shadow: inset 0 0 14px color-mix(in srgb, currentColor 55%, transparent);
 	}
 
 	.corner {
