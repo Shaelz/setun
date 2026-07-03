@@ -95,6 +95,8 @@ A wide instrument panel, not a card-based web app:
 │                                                                  │
 │ INPUT B     [ − | 0 | + ] [ − | 0 | + ] [ − | 0 | + ] …          │
 │                                                                  │
+│ LOAD        [ A ] [ B ]  ZERO ONE NEG ONE EIGHT … RANDOM         │
+│                                                                  │
 │ MODE        [ ADD ] [ SUB ] [ MUL ] [ NEG ] [ INC ] [ DEC ] [ AND ] [ OR ] [ NOT ] │
 │                                                                  │
 │ RESULT      [ + | − | 0 | + | 0 | − ]        [ RESULT → A ]      │

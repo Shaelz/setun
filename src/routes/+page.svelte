@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
+	import InfoPanel from '$lib/components/InfoPanel.svelte';
 	import LogicReadout from '$lib/components/LogicReadout.svelte';
+	import PresetBank from '$lib/components/PresetBank.svelte';
 	import TritRegister from '$lib/components/TritRegister.svelte';
 	import OperationSelector, {
 		LOGIC_MODES,
@@ -17,8 +19,10 @@
 		subtractBalancedTernary,
 		type RegisterResult,
 		type NormalizationTrace,
-		type Trit
+		type Trit,
+		type TritRegister as TritRegisterValue
 	} from '$lib/ternary/balancedTernary';
+	import type { PresetId } from '$lib/ternary/presets';
 	import { ternaryAnd, ternaryNot, ternaryOr } from '$lib/ternary/ternaryLogic';
 
 	const WIDTH = 6;
@@ -177,6 +181,23 @@
 		traceAfterUpdate();
 	}
 
+	function loadPreset(target: 'A' | 'B', value: TritRegisterValue, preset: PresetId) {
+		if (target === 'A') {
+			a = [...value];
+			traceAfterUpdate();
+			return;
+		}
+
+		b = [...value];
+		if (isUnary) {
+			statusText = result.overflow
+				? finalStatus(result)
+				: `B LOAD · ${preset.replaceAll('_', ' ')} · MODE IGNORES B`;
+			return;
+		}
+		traceAfterUpdate();
+	}
+
 	onDestroy(() => {
 		if (traceTimer) clearTimeout(traceTimer);
 	});
@@ -203,6 +224,7 @@
 				if (!isUnary) traceAfterUpdate();
 			}}
 		/>
+		<PresetBank width={WIDTH} onload={loadPreset} />
 
 		<div class="mode-row">
 			<span class="label">MODE</span>
@@ -240,6 +262,8 @@
 			<span class="readout-label">STATUS</span>
 			{statusText}
 		</div>
+
+		<InfoPanel />
 	</div>
 </main>
 
