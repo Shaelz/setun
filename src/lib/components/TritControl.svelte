@@ -17,6 +17,9 @@
 		/** Boosts brightness/glow — for the result register, which AESTHETIC.md
 		 * calls out as "more luminous... as if actively computed." */
 		emphasized?: boolean;
+		traceChanged?: boolean;
+		traceActive?: boolean;
+		onchange?: (value: Trit) => void;
 	}
 
 	let {
@@ -25,7 +28,10 @@
 		positionLabel = '',
 		disabled = false,
 		readonly = false,
-		emphasized = false
+		emphasized = false,
+		traceChanged = false,
+		traceActive = false,
+		onchange
 	}: Props = $props();
 
 	const POSITIONS: Trit[] = [-1, 0, 1];
@@ -36,8 +42,9 @@
 	let rootEl: HTMLDivElement;
 
 	function set(next: Trit) {
-		if (!interactive) return;
+		if (!interactive || next === value) return;
 		value = next;
+		onchange?.(next);
 	}
 
 	function onkeydown(event: KeyboardEvent) {
@@ -81,10 +88,12 @@
 <div class="wrap">
 	<div
 		bind:this={rootEl}
-		class="control"
+		class="control value-{value}"
 		class:disabled
 		class:readonly
 		class:emphasized
+		class:trace-changed={traceChanged}
+		class:trace-active={traceActive}
 		role="slider"
 		aria-label={label}
 		aria-orientation="horizontal"
@@ -119,6 +128,7 @@
 				</button>
 			{/each}
 		</div>
+		<span class="trace-marker" aria-hidden="true"></span>
 	</div>
 	{#if positionLabel}
 		<span class="position-label">{positionLabel}</span>
@@ -139,6 +149,45 @@
 		display: inline-block;
 		border-radius: 2px;
 		outline: none;
+	}
+
+	.trace-marker {
+		position: absolute;
+		left: 50%;
+		bottom: -4px;
+		width: 18px;
+		height: 2px;
+		background: var(--trace-color, var(--trit-zero));
+		opacity: 0;
+		transform: translateX(-50%) scaleX(0.45);
+		transition:
+			opacity 90ms linear,
+			transform 90ms var(--ease-settle),
+			box-shadow 90ms linear;
+		pointer-events: none;
+	}
+
+	.control.value--1 {
+		--trace-color: var(--trit-neg);
+	}
+
+	.control.value-0 {
+		--trace-color: var(--trit-zero);
+	}
+
+	.control.value-1 {
+		--trace-color: var(--trit-pos);
+	}
+
+	.control.trace-changed .trace-marker {
+		opacity: 0.72;
+		transform: translateX(-50%) scaleX(1);
+	}
+
+	.control.trace-active .trace-marker {
+		opacity: 1;
+		transform: translateX(-50%) scaleX(1.35);
+		box-shadow: 0 0 6px color-mix(in srgb, var(--trace-color) 65%, transparent);
 	}
 
 	.control.disabled {
@@ -277,8 +326,14 @@
 
 	@media (prefers-reduced-motion: reduce) {
 		.cell,
-		.corner {
+		.corner,
+		.trace-marker {
 			transition: none;
+		}
+
+		.control.trace-active .trace-marker {
+			transform: translateX(-50%) scaleX(1);
+			box-shadow: none;
 		}
 	}
 </style>

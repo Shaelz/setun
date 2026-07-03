@@ -3,9 +3,27 @@ export type Trit = -1 | 0 | 1;
 /** Most significant trit first, matching the on-screen register order. */
 export type TritRegister = Trit[];
 
+export interface CarryStep {
+	fromPower: number;
+	toPower: number;
+	fromIndex: number | null;
+	toIndex: number | null;
+	amount: number;
+}
+
+export interface NormalizationTrace {
+	/** In-register indices touched by normalization, ordered right to left. */
+	changedIndices: number[];
+	/** Carry/borrow events in the exact order normalization produced them. */
+	carrySteps: CarryStep[];
+	/** First nonzero power discarded above the register, when overflowing. */
+	overflowIndex: number | null;
+}
+
 export interface RegisterResult {
 	trits: TritRegister;
 	overflow: boolean;
+	trace: NormalizationTrace;
 }
 
 function mod3(n: number): number {
@@ -20,21 +38,43 @@ function mod3(n: number): number {
  */
 export function normalizeTrits(rawDigits: number[], width: number): RegisterResult {
 	const digits: Trit[] = [];
+	const changedIndices = new Set<number>();
+	const carrySteps: CarryStep[] = [];
 	let carry = 0;
 	let i = 0;
 	while (i < rawDigits.length || carry !== 0) {
 		const sum = (rawDigits[i] ?? 0) + carry;
 		const digit = (mod3(sum + 1) - 1) as Trit;
-		carry = (sum - digit) / 3;
+		const nextCarry = (sum - digit) / 3;
+		if (nextCarry !== 0) {
+			const fromIndex = i < width ? width - 1 - i : null;
+			const toIndex = i + 1 < width ? width - 2 - i : null;
+			if (fromIndex !== null) changedIndices.add(fromIndex);
+			if (toIndex !== null) changedIndices.add(toIndex);
+			carrySteps.push({
+				fromPower: i,
+				toPower: i + 1,
+				fromIndex,
+				toIndex,
+				amount: nextCarry
+			});
+		}
+		carry = nextCarry;
 		digits.push(digit);
 		i++;
 	}
 
 	const overflow = digits.slice(width).some((d) => d !== 0);
+	const overflowOffset = digits.slice(width).findIndex((digit) => digit !== 0);
+	const overflowIndex = overflowOffset === -1 ? null : width + overflowOffset;
 	const truncated: Trit[] = [];
 	for (let j = 0; j < width; j++) truncated.push(digits[j] ?? 0);
 
-	return { trits: truncated.reverse(), overflow };
+	return {
+		trits: truncated.reverse(),
+		overflow,
+		trace: { changedIndices: [...changedIndices], carrySteps, overflowIndex }
+	};
 }
 
 export function decimalToBalancedTernary(value: number, width: number): RegisterResult {

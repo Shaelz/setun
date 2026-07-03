@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import TritRegister from '$lib/components/TritRegister.svelte';
 	import OperationSelector, {
 		UNARY_MODES,
@@ -13,6 +14,7 @@
 		negateBalancedTernary,
 		subtractBalancedTernary,
 		type RegisterResult,
+		type NormalizationTrace,
 		type Trit
 	} from '$lib/ternary/balancedTernary';
 
@@ -25,6 +27,14 @@
 	let a = $state<Trit[]>(zeros());
 	let b = $state<Trit[]>(zeros());
 	let mode = $state<Mode>('ADD');
+	let visibleTrace = $state<NormalizationTrace>({
+		changedIndices: [],
+		carrySteps: [],
+		overflowIndex: null
+	});
+	let activeTraceIndex = $state<number | null>(null);
+	let statusText = $state('NORMALIZED · NO OVERFLOW');
+	let traceTimer: ReturnType<typeof setTimeout> | undefined;
 
 	let isUnary = $derived(UNARY_MODES.has(mode));
 
@@ -37,7 +47,11 @@
 			case 'MULTIPLY':
 				return multiplyBalancedTernary(a, b);
 			case 'NEGATE':
-				return { trits: negateBalancedTernary(a), overflow: false };
+				return {
+					trits: negateBalancedTernary(a),
+					overflow: false,
+					trace: { changedIndices: [], carrySteps: [], overflowIndex: null }
+				};
 			case 'INCREMENT':
 				return incrementBalancedTernary(a);
 			case 'DECREMENT':
@@ -53,10 +67,81 @@
 	let decimalB = $derived(balancedTernaryToDecimal(b));
 	let decimalResult = $derived(result.overflow ? null : balancedTernaryToDecimal(result.trits));
 
+	const SUPERSCRIPT = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶'];
+
+	function powerLabel(power: number): string {
+		return `3${SUPERSCRIPT[power] ?? `^${power}`}`;
+	}
+
+	function stepStatus(trace: NormalizationTrace, index: number): string {
+		const step = trace.carrySteps.find(
+			(candidate) => candidate.fromIndex === index || candidate.toIndex === index
+		);
+		if (!step) return `${trace.changedIndices.length} TRITS NORMALIZED`;
+		const kind = step.amount < 0 ? 'BORROW' : 'CARRY';
+		return `${kind} ${powerLabel(step.fromPower)} → ${powerLabel(step.toPower)}`;
+	}
+
+	function finalStatus(computation: RegisterResult): string {
+		if (computation.overflow) {
+			return `OVERFLOW AT ${powerLabel(computation.trace.overflowIndex ?? WIDTH)}`;
+		}
+		const steps = computation.trace.carrySteps;
+		const isChain = steps.every(
+			(step, index) =>
+				index === 0 ||
+				(step.fromPower === steps[index - 1].toPower && step.amount * steps[0].amount > 0)
+		);
+		if (steps.length > 0 && isChain) {
+			const kind = steps[0].amount < 0 ? 'BORROW' : 'CARRY';
+			return `${kind} ${[steps[0].fromPower, ...steps.map((step) => step.toPower)]
+				.map(powerLabel)
+				.join(' → ')}`;
+		}
+		if (computation.trace.changedIndices.length > 0) {
+			return `${computation.trace.changedIndices.length} TRITS NORMALIZED`;
+		}
+		return 'NORMALIZED · NO OVERFLOW';
+	}
+
+	function startTrace(computation: RegisterResult) {
+		if (traceTimer) clearTimeout(traceTimer);
+		visibleTrace = computation.trace;
+		activeTraceIndex = null;
+		const sequence = computation.trace.changedIndices;
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || sequence.length === 0) {
+			statusText = finalStatus(computation);
+			return;
+		}
+
+		let position = 0;
+		const advance = () => {
+			if (position >= sequence.length) {
+				activeTraceIndex = null;
+				statusText = finalStatus(computation);
+				return;
+			}
+			activeTraceIndex = sequence[position];
+			statusText = stepStatus(computation.trace, sequence[position]);
+			position += 1;
+			traceTimer = setTimeout(advance, 60);
+		};
+		advance();
+	}
+
+	function traceAfterUpdate() {
+		queueMicrotask(() => startTrace(result));
+	}
+
 	function copyResultToA() {
 		if (result.overflow) return;
 		a = [...result.trits];
+		traceAfterUpdate();
 	}
+
+	onDestroy(() => {
+		if (traceTimer) clearTimeout(traceTimer);
+	});
 </script>
 
 <svelte:head>
@@ -71,16 +156,30 @@
 			<span class="console-id label">REGISTER CONSOLE 01</span>
 		</header>
 
-		<TritRegister bind:value={a} label="Input A" />
-		<TritRegister bind:value={b} label="Input B" muted={isUnary} />
+		<TritRegister bind:value={a} label="Input A" onchange={traceAfterUpdate} />
+		<TritRegister
+			bind:value={b}
+			label="Input B"
+			muted={isUnary}
+			onchange={() => {
+				if (!isUnary) traceAfterUpdate();
+			}}
+		/>
 
 		<div class="mode-row">
 			<span class="label">MODE</span>
-			<OperationSelector bind:value={mode} />
+			<OperationSelector bind:value={mode} onchange={traceAfterUpdate} />
 		</div>
 
 		<div class="result-row">
-			<TritRegister value={result.trits} label="Result" readonly emphasized />
+			<TritRegister
+				value={result.trits}
+				label="Result"
+				readonly
+				emphasized
+				traceChangedIndices={visibleTrace.changedIndices}
+				{activeTraceIndex}
+			/>
 			<button type="button" class="copy-button" disabled={result.overflow} onclick={copyResultToA}>
 				RESULT → A
 			</button>
@@ -95,9 +194,9 @@
 			>
 		</div>
 
-		<div class="status" class:overflow={result.overflow}>
+		<div class="status" class:overflow={result.overflow} role="status" aria-live="polite">
 			<span class="readout-label">STATUS</span>
-			{result.overflow ? 'OVERFLOW' : 'NORMALIZED · NO OVERFLOW'}
+			{statusText}
 		</div>
 	</div>
 </main>

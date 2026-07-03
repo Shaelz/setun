@@ -22,6 +22,9 @@
 		/** Visually de-emphasized when this register isn't used by the
 		 * current mode (e.g. Input B during a unary operation). */
 		muted?: boolean;
+		traceChangedIndices?: number[];
+		activeTraceIndex?: number | null;
+		onchange?: (index: number) => void;
 	}
 
 	let {
@@ -29,7 +32,10 @@
 		label,
 		readonly = false,
 		emphasized = false,
-		muted = false
+		muted = false,
+		traceChangedIndices = [],
+		activeTraceIndex = null,
+		onchange
 	}: Props = $props();
 
 	const width = value.length;
@@ -45,6 +51,9 @@
 				positionLabel={`3${SUPERSCRIPT[width - 1 - i] ?? ''}`}
 				{readonly}
 				{emphasized}
+				traceChanged={traceChangedIndices.includes(i)}
+				traceActive={activeTraceIndex === i}
+				onchange={() => onchange?.(i)}
 			/>
 		{/each}
 	</div>

@@ -17,9 +17,16 @@
 <script lang="ts">
 	interface Props {
 		value: Mode;
+		onchange?: (value: Mode) => void;
 	}
 
-	let { value = $bindable() }: Props = $props();
+	let { value = $bindable(), onchange }: Props = $props();
+
+	function select(next: Mode) {
+		if (next === value) return;
+		value = next;
+		onchange?.(next);
+	}
 </script>
 
 <div class="selector" role="radiogroup" aria-label="Operation mode">
@@ -30,7 +37,7 @@
 			aria-checked={value === m.id}
 			class="option"
 			class:active={value === m.id}
-			onclick={() => (value = m.id)}
+			onclick={() => select(m.id)}
 		>
 			{m.label}
 		</button>

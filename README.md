@@ -203,9 +203,22 @@ Domain language: `trit`, `balanced ternary`, `register`, `normalize`, `carry`, `
 type Trit = -1 | 0 | 1;
 type TritRegister = Trit[];
 
+interface CarryStep {
+  fromPower: number;
+  toPower: number;
+  fromIndex: number | null;
+  toIndex: number | null;
+  amount: number;
+}
+
 interface RegisterResult {
   trits: TritRegister;
   overflow: boolean;
+  trace: {
+    changedIndices: number[];
+    carrySteps: CarryStep[];
+    overflowIndex: number | null;
+  };
 }
 
 const eight: TritRegister = [1, 0, -1]; // + 0 −
@@ -294,4 +307,7 @@ The user should leave with the feeling: **"Oh. Binary is not inevitable."**
 
 ## Status
 
-Not started. Idea stage.
+The six-trit arithmetic console is implemented with tested balanced-ternary conversion,
+normalization, arithmetic, explicit overflow, keyboard-accessible trit controls, chained
+RESULT → A computation, and Carry Trace v1. Ordered ternary logic, presets, the compact
+educational layer, and the final responsive/accessibility review remain v1 work.

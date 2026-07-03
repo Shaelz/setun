@@ -86,20 +86,46 @@ describe('negateBalancedTernary', () => {
 
 describe('incrementBalancedTernary / decrementBalancedTernary', () => {
 	it('increments across a carry boundary', () => {
-		// 3 = +0, incrementing to 4 = ++ ripples a carry through trit 2.
-		const result = incrementBalancedTernary(reg(3));
+		const result = incrementBalancedTernary(reg(1));
 		expect(result.overflow).toBe(false);
-		expect(balancedTernaryToDecimal(result.trits)).toBe(4);
+		expect(balancedTernaryToDecimal(result.trits)).toBe(2);
+		expect(result.trace.changedIndices).toEqual([5, 4]);
+		expect(result.trace.carrySteps).toEqual([
+			{ fromPower: 0, toPower: 1, fromIndex: 5, toIndex: 4, amount: 1 }
+		]);
+	});
+
+	it('reports a multi-trit carry chain in animation order', () => {
+		const result = incrementBalancedTernary(reg(4));
+
+		expect(balancedTernaryToDecimal(result.trits)).toBe(5);
+		expect(result.trace.changedIndices).toEqual([5, 4, 3]);
+		expect(result.trace.carrySteps.map(({ fromPower, toPower }) => [fromPower, toPower])).toEqual([
+			[0, 1],
+			[1, 2]
+		]);
 	});
 
 	it('decrements across a carry boundary', () => {
-		const result = decrementBalancedTernary(reg(-3));
+		const result = decrementBalancedTernary(reg(-1));
 		expect(result.overflow).toBe(false);
-		expect(balancedTernaryToDecimal(result.trits)).toBe(-4);
+		expect(balancedTernaryToDecimal(result.trits)).toBe(-2);
+		expect(result.trace.carrySteps).toEqual([
+			{ fromPower: 0, toPower: 1, fromIndex: 5, toIndex: 4, amount: -1 }
+		]);
 	});
 
-	it('flags overflow at the top of the range', () => {
-		expect(incrementBalancedTernary(reg(364)).overflow).toBe(true);
+	it('reports a carry exiting at 3^6 when the top boundary overflows', () => {
+		const result = incrementBalancedTernary(reg(364));
+		expect(result.overflow).toBe(true);
+		expect(result.trace.overflowIndex).toBe(6);
+		expect(result.trace.carrySteps.at(-1)).toEqual({
+			fromPower: 5,
+			toPower: 6,
+			fromIndex: 0,
+			toIndex: null,
+			amount: 1
+		});
 		expect(decrementBalancedTernary(reg(-364)).overflow).toBe(true);
 	});
 });
@@ -109,6 +135,19 @@ describe('multiplyBalancedTernary', () => {
 		const result = multiplyBalancedTernary(reg(2), reg(3));
 		expect(result.overflow).toBe(false);
 		expect(balancedTernaryToDecimal(result.trits)).toBe(6);
+	});
+
+	it('reports normalization carries in a product', () => {
+		const result = multiplyBalancedTernary(reg(2), reg(2));
+
+		expect(balancedTernaryToDecimal(result.trits)).toBe(4);
+		expect(result.trace.carrySteps).toContainEqual({
+			fromPower: 1,
+			toPower: 2,
+			fromIndex: 4,
+			toIndex: 3,
+			amount: -1
+		});
 	});
 
 	it('multiplies 8 × −6 with no sign handling needed', () => {
@@ -139,5 +178,13 @@ describe('normalizeTrits', () => {
 	it('reports overflow only when a nonzero digit is truncated', () => {
 		expect(normalizeTrits([0, 0, 0, 0, 0, 0, 1], WIDTH).overflow).toBe(true);
 		expect(normalizeTrits([0, 0, 0, 0, 0, 1], WIDTH).overflow).toBe(false);
+	});
+
+	it('leaves the trace empty when no normalization is needed', () => {
+		expect(normalizeTrits([1, 0, -1], WIDTH).trace).toEqual({
+			changedIndices: [],
+			carrySteps: [],
+			overflowIndex: null
+		});
 	});
 });
