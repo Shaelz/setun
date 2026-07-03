@@ -35,19 +35,12 @@
 	</section>
 
 	<section>
-		<h2 class="label">Fixed states, side by side</h2>
+		<h2 class="label">Fixed states, side by side (disabled/read-only)</h2>
 		<p class="hint">Read clearly at a glance, without relying on color alone?</p>
 		<div class="row">
 			<TritControl value={-1} label="Fixed negative one" disabled />
 			<TritControl value={0} label="Fixed zero" disabled />
 			<TritControl value={1} label="Fixed positive one" disabled />
-		</div>
-	</section>
-
-	<section>
-		<h2 class="label">Disabled</h2>
-		<div class="row">
-			<TritControl value={1} label="Disabled example" disabled />
 		</div>
 	</section>
 
@@ -72,8 +65,9 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 2.5rem;
-		padding: 3rem 1.5rem 5rem;
+		justify-content: center;
+		gap: 1.25rem;
+		padding: 1.25rem 1.5rem;
 	}
 
 	header {
@@ -81,10 +75,10 @@
 	}
 
 	h1 {
-		margin: 0 0 0.4rem;
+		margin: 0 0 0.25rem;
 		font-family: var(--font-label);
 		font-weight: 600;
-		font-size: 1.6rem;
+		font-size: 1.4rem;
 		letter-spacing: 0.06em;
 	}
 
@@ -101,7 +95,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.75rem;
+		gap: 0.4rem;
 	}
 
 	h2.label {
