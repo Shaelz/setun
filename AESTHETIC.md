@@ -95,7 +95,7 @@ A wide instrument panel, not a card-based web app:
 │                                                                  │
 │ INPUT B     [ − | 0 | + ] [ − | 0 | + ] [ − | 0 | + ] …          │
 │                                                                  │
-│ MODE        [ ADD ] [ SUB ] [ MUL ] [ NEG ] [ INC ] [ DEC ] [ LOGIC ] │
+│ MODE        [ ADD ] [ SUB ] [ MUL ] [ NEG ] [ INC ] [ DEC ] [ AND ] [ OR ] [ NOT ] │
 │                                                                  │
 │ RESULT      [ + | − | 0 | + | 0 | − ]        [ RESULT → A ]      │
 │                                                                  │

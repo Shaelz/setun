@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
+	import LogicReadout from '$lib/components/LogicReadout.svelte';
 	import TritRegister from '$lib/components/TritRegister.svelte';
 	import OperationSelector, {
+		LOGIC_MODES,
 		UNARY_MODES,
 		type Mode
 	} from '$lib/components/OperationSelector.svelte';
@@ -17,8 +19,10 @@
 		type NormalizationTrace,
 		type Trit
 	} from '$lib/ternary/balancedTernary';
+	import { ternaryAnd, ternaryNot, ternaryOr } from '$lib/ternary/ternaryLogic';
 
 	const WIDTH = 6;
+	type LogicMode = Extract<Mode, 'TERNARY_AND' | 'TERNARY_OR' | 'TERNARY_NOT'>;
 
 	function zeros(): Trit[] {
 		return new Array(WIDTH).fill(0);
@@ -37,6 +41,8 @@
 	let traceTimer: ReturnType<typeof setTimeout> | undefined;
 
 	let isUnary = $derived(UNARY_MODES.has(mode));
+	let isLogic = $derived(LOGIC_MODES.has(mode));
+	let logicMode = $derived<LogicMode | null>(isLogic ? (mode as LogicMode) : null);
 
 	let result = $derived.by<RegisterResult>(() => {
 		switch (mode) {
@@ -56,6 +62,24 @@
 				return incrementBalancedTernary(a);
 			case 'DECREMENT':
 				return decrementBalancedTernary(a);
+			case 'TERNARY_AND':
+				return {
+					trits: ternaryAnd(a, b),
+					overflow: false,
+					trace: { changedIndices: [], carrySteps: [], overflowIndex: null }
+				};
+			case 'TERNARY_OR':
+				return {
+					trits: ternaryOr(a, b),
+					overflow: false,
+					trace: { changedIndices: [], carrySteps: [], overflowIndex: null }
+				};
+			case 'TERNARY_NOT':
+				return {
+					trits: ternaryNot(a),
+					overflow: false,
+					trace: { changedIndices: [], carrySteps: [], overflowIndex: null }
+				};
 			default: {
 				const exhaustive: never = mode;
 				throw new Error(`Unhandled mode: ${exhaustive}`);
@@ -130,7 +154,21 @@
 	}
 
 	function traceAfterUpdate() {
-		queueMicrotask(() => startTrace(result));
+		queueMicrotask(() => {
+			if (isLogic) {
+				if (traceTimer) clearTimeout(traceTimer);
+				visibleTrace = { changedIndices: [], carrySteps: [], overflowIndex: null };
+				activeTraceIndex = null;
+				statusText =
+					mode === 'TERNARY_AND'
+						? 'ORDERED AND · MIN(A,B)'
+						: mode === 'TERNARY_OR'
+							? 'ORDERED OR · MAX(A,B)'
+							: 'ORDERED NOT · −A';
+				return;
+			}
+			startTrace(result);
+		});
 	}
 
 	function copyResultToA() {
@@ -170,6 +208,10 @@
 			<span class="label">MODE</span>
 			<OperationSelector bind:value={mode} onchange={traceAfterUpdate} />
 		</div>
+
+		{#if logicMode}
+			<LogicReadout {a} {b} result={result.trits} mode={logicMode} />
+		{/if}
 
 		<div class="result-row">
 			<TritRegister

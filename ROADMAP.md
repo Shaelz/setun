@@ -12,8 +12,8 @@ The core logic and the design don't touch, so they can proceed in parallel — n
 1. **Complete — core ternary logic and tests.** Conversion, normalization, all six arithmetic operations, and ordered ternary AND/OR/NOT are implemented and tested with explicit overflow.
 2. **Complete — arithmetic console.** Input and result registers, arithmetic modes, decimal readout, keyboard controls, overflow display, and RESULT → A chaining are wired.
 3. **Complete — Carry Trace v1.** The domain layer emits ordered normalization metadata; the result register shows a brief right-to-left signal, static reduced-motion markers, and factual STATUS text.
-4. **Next — ordered ternary logic UI.** Wire the existing AND/OR/NOT domain functions into the operation selector and clearly label the `− < 0 < +` ordering.
-5. **Then — presets and compact educational layer.** Add the documented presets and the restrained "Why balanced ternary?" section.
+4. **Complete — ordered ternary logic UI.** AND/OR/NOT are wired into the console with explicit `− < 0 < +` ordering, unary NOT behavior, and a compact per-trit logic readout.
+5. **Next — presets and compact educational layer.** Add the documented presets and the restrained "Why balanced ternary?" section.
 6. **Finish — responsive/accessibility validation and definition-of-done review.** Validate narrow-screen sizing, keyboard and assistive behavior, reduced motion, and the full README definition of done before calling v1 shipped.
 
 ## Phase 2

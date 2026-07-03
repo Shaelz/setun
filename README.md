@@ -64,7 +64,7 @@ INPUT B
 [ − | 0 | + ] [ − | 0 | + ] [ − | 0 | + ] [ − | 0 | + ] [ − | 0 | + ] [ − | 0 | + ]
 
 MODE
-ADD / SUBTRACT / MULTIPLY / NEGATE / INCREMENT / DECREMENT / LOGIC
+ADD / SUBTRACT / MULTIPLY / NEGATE / INCREMENT / DECREMENT / AND / OR / NOT
 
 RESULT
 [ − | 0 | + ] [ − | 0 | + ] [ − | 0 | + ] [ − | 0 | + ] [ − | 0 | + ] [ − | 0 | + ]
@@ -307,7 +307,7 @@ The user should leave with the feeling: **"Oh. Binary is not inevitable."**
 
 ## Status
 
-The six-trit arithmetic console is implemented with tested balanced-ternary conversion,
-normalization, arithmetic, explicit overflow, keyboard-accessible trit controls, chained
-RESULT → A computation, and Carry Trace v1. Ordered ternary logic, presets, the compact
-educational layer, and the final responsive/accessibility review remain v1 work.
+The six-trit console implements tested balanced-ternary arithmetic, explicit overflow,
+keyboard-accessible trit controls, chained RESULT → A computation, Carry Trace v1, and
+ordered ternary AND/OR/NOT with a per-trit logic readout. Presets, the compact educational
+layer, and the final responsive/accessibility review remain v1 work.

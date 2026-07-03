@@ -1,5 +1,14 @@
 <script module lang="ts">
-	export type Mode = 'ADD' | 'SUBTRACT' | 'MULTIPLY' | 'NEGATE' | 'INCREMENT' | 'DECREMENT';
+	export type Mode =
+		| 'ADD'
+		| 'SUBTRACT'
+		| 'MULTIPLY'
+		| 'NEGATE'
+		| 'INCREMENT'
+		| 'DECREMENT'
+		| 'TERNARY_AND'
+		| 'TERNARY_OR'
+		| 'TERNARY_NOT';
 
 	export const MODES: { id: Mode; label: string }[] = [
 		{ id: 'ADD', label: 'ADD' },
@@ -7,11 +16,25 @@
 		{ id: 'MULTIPLY', label: 'MUL' },
 		{ id: 'NEGATE', label: 'NEG' },
 		{ id: 'INCREMENT', label: 'INC' },
-		{ id: 'DECREMENT', label: 'DEC' }
+		{ id: 'DECREMENT', label: 'DEC' },
+		{ id: 'TERNARY_AND', label: 'AND' },
+		{ id: 'TERNARY_OR', label: 'OR' },
+		{ id: 'TERNARY_NOT', label: 'NOT' }
 	];
 
 	/** Modes that read only Input A — Input B is unused and gets visually muted. */
-	export const UNARY_MODES: ReadonlySet<Mode> = new Set(['NEGATE', 'INCREMENT', 'DECREMENT']);
+	export const UNARY_MODES: ReadonlySet<Mode> = new Set([
+		'NEGATE',
+		'INCREMENT',
+		'DECREMENT',
+		'TERNARY_NOT'
+	]);
+
+	export const LOGIC_MODES: ReadonlySet<Mode> = new Set([
+		'TERNARY_AND',
+		'TERNARY_OR',
+		'TERNARY_NOT'
+	]);
 </script>
 
 <script lang="ts">
@@ -60,6 +83,8 @@
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
 		font-size: 0.75rem;
+		min-width: 44px;
+		min-height: 44px;
 		padding: 0.4rem 0.75rem;
 		border-radius: 2px;
 		cursor: pointer;
