@@ -10,12 +10,6 @@
 </main>
 
 <style>
-	:global(body) {
-		margin: 0;
-		background: #121412;
-		color: #d9d7cb;
-	}
-
 	main {
 		min-height: 100vh;
 		display: flex;
@@ -23,7 +17,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 0.5rem;
-		font-family: monospace;
+		font-family: var(--font-data);
 		letter-spacing: 0.08em;
 	}
 
@@ -36,7 +30,7 @@
 	p {
 		margin: 0;
 		font-size: 0.8rem;
-		color: #8f9188;
+		color: var(--label);
 	}
 
 	.status {

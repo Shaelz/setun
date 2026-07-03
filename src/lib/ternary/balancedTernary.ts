@@ -42,7 +42,7 @@ export function decimalToBalancedTernary(value: number, width: number): Register
 }
 
 export function balancedTernaryToDecimal(trits: TritRegister): number {
-	return trits.reduce((value, trit) => value * 3 + trit, 0);
+	return trits.reduce<number>((value, trit) => value * 3 + trit, 0);
 }
 
 function toLeastSignificantFirst(trits: TritRegister): Trit[] {

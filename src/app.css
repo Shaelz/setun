@@ -1,0 +1,45 @@
+@import '@fontsource/barlow-condensed/500.css';
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/martian-mono/400.css';
+@import '@fontsource/martian-mono/500.css';
+@import '@fontsource/martian-mono/600.css';
+
+:root {
+	/* Surfaces — grey-green enamel ramp */
+	--panel-0: #121412; /* page background */
+	--panel-1: #1a1d1a; /* raised module face (registers, mode block) */
+	--panel-2: #0c0e0c; /* inset wells: trit tracks, display windows */
+	--line: #2b2f2a; /* hairline borders and panel rules */
+	--edge: rgba(255, 255, 255, 0.06); /* machined-edge catch on raised surfaces */
+
+	/* Text */
+	--label: #8f9188; /* engraved section labels */
+	--text: #d9d7cb; /* readouts and values */
+
+	/* Trit states — the only saturated colors in the app */
+	--trit-neg: #f2a73b; /* − : warm amber */
+	--trit-zero: #9aa0a6; /* 0 : calm neutral grey */
+	--trit-pos: #3fc6d8; /* + : phosphor cyan */
+
+	/* Status */
+	--overflow: #e0483e; /* OVERFLOW lamp only */
+	--focus: #e9e7df; /* keyboard focus marks */
+
+	/* Type */
+	--font-label: 'Barlow Condensed', sans-serif;
+	--font-data: 'Martian Mono', monospace;
+
+	/* Motion */
+	--ease-settle: cubic-bezier(0.2, 0, 0, 1);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: var(--panel-0);
+	color: var(--text);
+	font-family: var(--font-data);
+}

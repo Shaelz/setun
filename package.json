@@ -22,5 +22,9 @@
 		"typescript": "^6.0.3",
 		"vite": "^8.0.16",
 		"vitest": "^4.1.9"
+	},
+	"dependencies": {
+		"@fontsource/barlow-condensed": "^5.2.8",
+		"@fontsource/martian-mono": "^5.2.7"
 	}
 }
