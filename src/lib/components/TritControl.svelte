@@ -136,7 +136,7 @@
 
 	.divider {
 		width: 1px;
-		background: var(--line);
+		background: linear-gradient(to bottom, var(--edge), var(--line) 50%, var(--line));
 	}
 
 	.cell {
@@ -149,38 +149,48 @@
 		font-size: 1.25rem;
 		font-weight: 600;
 		line-height: 1;
-		color: var(--text);
-		opacity: 0.3;
+		/* Dim baseline is tinted per trit (not neutral --text) so each
+		   position's identity reads even at rest; 0.65 keeps contrast
+		   against --panel-2 above 3:1 for all three trit colors. */
+		opacity: 0.65;
 		cursor: pointer;
+		transform: scale(1);
 		transition:
 			opacity 160ms var(--ease-settle),
 			background-color 160ms var(--ease-settle),
-			box-shadow 160ms var(--ease-settle);
+			box-shadow 160ms var(--ease-settle),
+			transform 80ms var(--ease-settle);
 	}
 
 	.control.disabled .cell {
 		cursor: default;
 	}
 
-	.cell.trit--1.selected {
+	.cell.trit--1 {
 		color: var(--trit-neg);
-		opacity: 1;
-		background: color-mix(in srgb, var(--trit-neg) 14%, transparent);
-		box-shadow: inset 0 0 8px color-mix(in srgb, var(--trit-neg) 35%, transparent);
 	}
 
-	.cell.trit-0.selected {
+	.cell.trit-0 {
 		color: var(--trit-zero);
-		opacity: 1;
-		background: color-mix(in srgb, var(--trit-zero) 14%, transparent);
-		box-shadow: inset 0 0 8px color-mix(in srgb, var(--trit-zero) 35%, transparent);
 	}
 
-	.cell.trit-1.selected {
+	.cell.trit-1 {
 		color: var(--trit-pos);
+	}
+
+	.cell.selected {
 		opacity: 1;
-		background: color-mix(in srgb, var(--trit-pos) 14%, transparent);
-		box-shadow: inset 0 0 8px color-mix(in srgb, var(--trit-pos) 35%, transparent);
+		background: color-mix(in srgb, currentColor 14%, transparent);
+		box-shadow: inset 0 0 8px color-mix(in srgb, currentColor 35%, transparent);
+	}
+
+	.control:not(.disabled) .cell:hover:not(.selected) {
+		opacity: 0.85;
+		background: color-mix(in srgb, currentColor 10%, transparent);
+	}
+
+	.control:not(.disabled) .cell:active {
+		transform: scale(0.94);
 	}
 
 	.corner {
