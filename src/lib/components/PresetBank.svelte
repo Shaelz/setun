@@ -11,22 +11,53 @@
 
 	let { width, onload }: Props = $props();
 	let target = $state<Target>('A');
+	let targetElement: HTMLDivElement;
 
 	function load(id: PresetId) {
 		onload(target, presetRegister(id, width), id);
+	}
+
+	function selectTarget(next: Target) {
+		target = next;
+	}
+
+	function moveTarget(event: KeyboardEvent, index: number) {
+		if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
+			return;
+		}
+		event.preventDefault();
+		const nextIndex =
+			event.key === 'Home'
+				? 0
+				: event.key === 'End'
+					? 1
+					: ['ArrowLeft', 'ArrowUp'].includes(event.key)
+						? (index - 1 + 2) % 2
+						: (index + 1) % 2;
+		selectTarget((['A', 'B'] as const)[nextIndex]);
+		queueMicrotask(() =>
+			targetElement.querySelector<HTMLButtonElement>('[aria-checked="true"]')?.focus()
+		);
 	}
 </script>
 
 <section class="preset-bank" aria-labelledby="preset-heading">
 	<span id="preset-heading" class="label">LOAD</span>
-	<div class="targets" role="radiogroup" aria-label="Preset destination register">
-		{#each ['A', 'B'] as option (option)}
+	<div
+		bind:this={targetElement}
+		class="targets"
+		role="radiogroup"
+		aria-label="Preset destination register"
+	>
+		{#each ['A', 'B'] as option, index (option)}
 			<button
 				type="button"
 				class:active={target === option}
 				role="radio"
 				aria-checked={target === option}
-				onclick={() => (target = option as Target)}
+				tabindex={target === option ? 0 : -1}
+				onclick={() => selectTarget(option as Target)}
+				onkeydown={(event) => moveTarget(event, index)}
 			>
 				{option}
 			</button>
@@ -34,7 +65,11 @@
 	</div>
 	<div class="preset-buttons">
 		{#each PRESETS as preset (preset.id)}
-			<button type="button" onclick={() => load(preset.id)}>{preset.label}</button>
+			<button
+				type="button"
+				aria-label={`Load ${preset.label} into Input ${target}`}
+				onclick={() => load(preset.id)}>{preset.label}</button
+			>
 		{/each}
 	</div>
 </section>

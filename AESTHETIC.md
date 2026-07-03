@@ -52,7 +52,7 @@ The panel ramp leans **grey-green** — the enamel of period lab equipment — r
   --trit-pos:  #3fc6d8;  /* + : phosphor cyan */
 
   /* Status */
-  --overflow: #e0483e;  /* OVERFLOW lamp only — used nowhere else */
+  --overflow: #e75a50;  /* OVERFLOW lamp only — AA text contrast on panel-1 */
   --focus:    #e9e7df;  /* keyboard focus marks */
 }
 ```

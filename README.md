@@ -307,7 +307,7 @@ The user should leave with the feeling: **"Oh. Binary is not inevitable."**
 
 ## Status
 
-The six-trit console implements tested balanced-ternary arithmetic, explicit overflow,
-keyboard-accessible trit controls, chained RESULT → A computation, Carry Trace v1,
-ordered ternary AND/OR/NOT, an A/B preset bank, and a compact balanced-ternary reference
-panel. The final responsive/accessibility and definition-of-done review remains v1 work.
+v1 is complete. The six-trit console includes tested balanced-ternary arithmetic, explicit
+overflow, keyboard-accessible controls, chained RESULT → A computation, Carry Trace v1,
+ordered ternary AND/OR/NOT, an A/B preset bank, and a compact reference panel. Responsive,
+reduced-motion, keyboard, assistive-state, and definition-of-done checks have been completed.

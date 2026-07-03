@@ -220,6 +220,7 @@
 			bind:value={b}
 			label="Input B"
 			muted={isUnary}
+			disabled={isUnary}
 			onchange={() => {
 				if (!isUnary) traceAfterUpdate();
 			}}
@@ -258,7 +259,13 @@
 			>
 		</div>
 
-		<div class="status" class:overflow={result.overflow} role="status" aria-live="polite">
+		<div
+			class="status"
+			class:overflow={result.overflow}
+			role="status"
+			aria-live={activeTraceIndex === null ? 'polite' : 'off'}
+			aria-atomic="true"
+		>
 			<span class="readout-label">STATUS</span>
 			{statusText}
 		</div>
@@ -271,7 +278,7 @@
 	main {
 		min-height: 100vh;
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: center;
 		padding: 2rem 1rem;
 	}
@@ -286,6 +293,7 @@
 		border: 1px solid var(--line);
 		border-top-color: var(--edge);
 		border-radius: 2px;
+		margin-block: 0;
 	}
 
 	header {
@@ -340,6 +348,7 @@
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
 		font-size: 0.75rem;
+		min-height: 44px;
 		padding: 0.5rem 0.75rem;
 		border-radius: 2px;
 		cursor: pointer;
@@ -350,6 +359,11 @@
 
 	.copy-button:hover:not(:disabled) {
 		border-color: var(--edge);
+	}
+
+	.copy-button:focus-visible {
+		outline: 1px solid var(--focus);
+		outline-offset: 2px;
 	}
 
 	.copy-button:disabled {
@@ -388,6 +402,12 @@
 
 	.status.overflow {
 		color: var(--overflow);
+	}
+
+	@media (min-height: 50rem) {
+		.panel:not(:has(:global(.info-panel[open]))) {
+			margin-block: auto;
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {

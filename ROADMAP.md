@@ -14,7 +14,9 @@ The core logic and the design don't touch, so they can proceed in parallel — n
 3. **Complete — Carry Trace v1.** The domain layer emits ordered normalization metadata; the result register shows a brief right-to-left signal, static reduced-motion markers, and factual STATUS text.
 4. **Complete — ordered ternary logic UI.** AND/OR/NOT are wired into the console with explicit `− < 0 < +` ordering, unary NOT behavior, and a compact per-trit logic readout.
 5. **Complete — presets and compact educational layer.** A shared A/B load bank provides all documented presets, including per-trit RANDOM, and a collapsed instrument-reference plate explains the core balanced-ternary properties.
-6. **Next — responsive/accessibility validation and definition-of-done review.** Validate narrow-screen sizing, keyboard and assistive behavior, reduced motion, and the full README definition of done before calling v1 shipped.
+6. **Complete — responsive/accessibility validation and definition-of-done review.** The console was validated from 375px through desktop, interactive targets meet 44px minimums, radio groups use roving keyboard navigation, unary inputs expose their disabled state, reduced-motion equivalents remain in place, and every README definition-of-done item is satisfied.
+
+**v1 is complete.** Further product work belongs to Phase 2.
 
 ## Phase 2
 

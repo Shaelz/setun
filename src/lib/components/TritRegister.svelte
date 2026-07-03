@@ -18,6 +18,7 @@
 		/** Screen-reader and engraved-heading label, e.g. "Input A". */
 		label: string;
 		readonly?: boolean;
+		disabled?: boolean;
 		emphasized?: boolean;
 		/** Visually de-emphasized when this register isn't used by the
 		 * current mode (e.g. Input B during a unary operation). */
@@ -31,6 +32,7 @@
 		value = $bindable([]),
 		label,
 		readonly = false,
+		disabled = false,
 		emphasized = false,
 		muted = false,
 		traceChangedIndices = [],
@@ -47,9 +49,10 @@
 		{#each value as _, i (i)}
 			<TritControl
 				bind:value={value[i]}
-				label={`${label}, trit ${i + 1} of ${width}`}
+				label={`${label}${muted ? ', unused in current mode' : ''}, trit ${i + 1} of ${width}`}
 				positionLabel={`3${SUPERSCRIPT[width - 1 - i] ?? ''}`}
 				{readonly}
+				{disabled}
 				{emphasized}
 				traceChanged={traceChangedIndices.includes(i)}
 				traceActive={activeTraceIndex === i}

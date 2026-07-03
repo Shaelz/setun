@@ -24,7 +24,7 @@
 	--trit-pos: #3fc6d8; /* + : phosphor cyan */
 
 	/* Status */
-	--overflow: #e0483e; /* OVERFLOW lamp only */
+	--overflow: #e75a50; /* OVERFLOW lamp only; 4.84:1 on --panel-1 */
 	--focus: #e9e7df; /* keyboard focus marks */
 
 	/* Type */

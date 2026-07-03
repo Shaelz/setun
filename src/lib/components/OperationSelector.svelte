@@ -44,23 +44,53 @@
 	}
 
 	let { value = $bindable(), onchange }: Props = $props();
+	let selectorElement: HTMLDivElement;
 
 	function select(next: Mode) {
 		if (next === value) return;
 		value = next;
 		onchange?.(next);
 	}
+
+	function moveSelection(event: KeyboardEvent, index: number) {
+		let nextIndex: number;
+		switch (event.key) {
+			case 'ArrowLeft':
+			case 'ArrowUp':
+				nextIndex = (index - 1 + MODES.length) % MODES.length;
+				break;
+			case 'ArrowRight':
+			case 'ArrowDown':
+				nextIndex = (index + 1) % MODES.length;
+				break;
+			case 'Home':
+				nextIndex = 0;
+				break;
+			case 'End':
+				nextIndex = MODES.length - 1;
+				break;
+			default:
+				return;
+		}
+		event.preventDefault();
+		select(MODES[nextIndex].id);
+		queueMicrotask(() =>
+			selectorElement.querySelector<HTMLButtonElement>('[aria-checked="true"]')?.focus()
+		);
+	}
 </script>
 
-<div class="selector" role="radiogroup" aria-label="Operation mode">
-	{#each MODES as m (m.id)}
+<div bind:this={selectorElement} class="selector" role="radiogroup" aria-label="Operation mode">
+	{#each MODES as m, index (m.id)}
 		<button
 			type="button"
 			role="radio"
 			aria-checked={value === m.id}
+			tabindex={value === m.id ? 0 : -1}
 			class="option"
 			class:active={value === m.id}
 			onclick={() => select(m.id)}
+			onkeydown={(event) => moveSelection(event, index)}
 		>
 			{m.label}
 		</button>
@@ -97,6 +127,11 @@
 	.option:hover {
 		color: var(--text);
 		border-color: var(--edge);
+	}
+
+	.option:focus-visible {
+		outline: 1px solid var(--focus);
+		outline-offset: 2px;
 	}
 
 	.option.active {
