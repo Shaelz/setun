@@ -5,6 +5,8 @@
 @import '@fontsource/martian-mono/600.css';
 
 :root {
+	color-scheme: dark;
+
 	/* Surfaces — grey-green enamel ramp */
 	--panel-0: #121412; /* page background */
 	--panel-1: #1a1d1a; /* raised module face (registers, mode block) */
@@ -37,9 +39,42 @@
 	box-sizing: border-box;
 }
 
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--line) var(--panel-2);
+}
+
+*::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+	background: var(--panel-2);
+}
+
+*::-webkit-scrollbar-thumb {
+	background: var(--line);
+	border-radius: 2px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background: var(--label);
+}
+
+*::-webkit-scrollbar-corner {
+	background: var(--panel-2);
+}
+
 body {
 	margin: 0;
 	background: var(--panel-0);
 	color: var(--text);
 	font-family: var(--font-data);
+	/* An instrument panel isn't a document — accidental text selection
+	   from rapid clicking (or the mobile tap-highlight flash) breaks
+	   the illusion. */
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-tap-highlight-color: transparent;
 }
