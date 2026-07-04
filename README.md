@@ -74,6 +74,9 @@ leaves thinking: **"Oh. Binary is not inevitable."**
   handle continuing the sequence
 - A Playwright smoke suite covering keyboard input, mode switching, overflow,
   copying a result, and mobile reachability
+- Open Graph, Twitter Card, and JSON-LD metadata, a custom OG image rendered
+  from the console's own design tokens, and a minimal sitemap. The playground
+  exhibit is `noindex` so it doesn't compete with the console in search.
 
 ## Using the console
 
@@ -180,8 +183,10 @@ no backend, accounts, persistence, analytics, or network-dependent arithmetic.
 
 ```text
 e2e/               Playwright smoke suite (npm run test:e2e)
+static/            favicons, og-image.png, robots.txt, sitemap.xml
 src/
   lib/
+    site.ts        shared site URL/name for meta tags and the sitemap
     ternary/       balanced-ternary arithmetic, logic, presets, and tests
     components/    trit controls, registers, selectors, readouts, and reference UI
   routes/

@@ -20,6 +20,10 @@
 <svelte:head>
 	<title>Trit control — component exhibit</title>
 	<meta name="description" content="The TRIT//-0+ three-position trit control, shown in isolation." />
+	<!-- A component exhibit, not a landing page — kept out of search results
+	     so it doesn't compete with the main console for the same queries.
+	     "follow" so its link back to the console is still discoverable. -->
+	<meta name="robots" content="noindex, follow" />
 </svelte:head>
 
 <main>

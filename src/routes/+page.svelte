@@ -27,6 +27,26 @@
 	} from '$lib/ternary/balancedTernary';
 	import { presetRegister, type PresetId } from '$lib/ternary/presets';
 	import { compareBalancedTernary, ternaryAnd, ternaryNot, ternaryOr } from '$lib/ternary/ternaryLogic';
+	import { SITE_NAME, SITE_URL } from '$lib/site';
+
+	const PAGE_TITLE = `${SITE_NAME} — Balanced Ternary Register Console`;
+	const PAGE_DESCRIPTION =
+		'A tactile six-trit balanced-ternary calculator and logic console. Treats −, 0, and + as native digits — no sign bit, no two’s complement. Oh. Binary is not inevitable.';
+	const OG_IMAGE_URL = `${SITE_URL}/og-image.png`;
+
+	const jsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'WebApplication',
+		name: SITE_NAME,
+		alternateName: 'setun',
+		description: PAGE_DESCRIPTION,
+		url: SITE_URL,
+		applicationCategory: 'EducationalApplication',
+		operatingSystem: 'Any (runs in a web browser)',
+		browserRequirements: 'Requires JavaScript',
+		isAccessibleForFree: true,
+		offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
+	};
 
 	const WIDTH = 6;
 	type LogicMode = Extract<Mode, 'TERNARY_AND' | 'TERNARY_OR' | 'TERNARY_NOT'>;
@@ -276,8 +296,31 @@
 </script>
 
 <svelte:head>
-	<title>TRIT//-0+</title>
-	<meta name="description" content="Balanced ternary register console" />
+	<title>{PAGE_TITLE}</title>
+	<meta name="description" content={PAGE_DESCRIPTION} />
+	<link rel="canonical" href={SITE_URL} />
+	<meta name="theme-color" content="#121412" />
+
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content={SITE_NAME} />
+	<meta property="og:title" content={PAGE_TITLE} />
+	<meta property="og:description" content={PAGE_DESCRIPTION} />
+	<meta property="og:url" content={SITE_URL} />
+	<meta property="og:image" content={OG_IMAGE_URL} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta
+		property="og:image:alt"
+		content="The TRIT//-0+ console showing 1 + 1 normalizing to +− in balanced ternary."
+	/>
+	<meta property="og:locale" content="en_US" />
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={PAGE_TITLE} />
+	<meta name="twitter:description" content={PAGE_DESCRIPTION} />
+	<meta name="twitter:image" content={OG_IMAGE_URL} />
+
+	{@html `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`}
 </svelte:head>
 
 <main>
