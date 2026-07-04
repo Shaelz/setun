@@ -97,7 +97,9 @@
 		min-width: 0;
 		overflow-x: auto;
 		overflow-y: hidden;
-		padding: 2px 2px 6px;
+		/* Focus brackets extend 4px beyond each control. Keep that clearance
+		   inside the scrollport so overflow-y does not clip their top edge. */
+		padding: 4px 4px 6px;
 	}
 
 	/* Each trit control is a full three-way switch (~136px), not a single
