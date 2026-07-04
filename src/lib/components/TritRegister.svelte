@@ -23,6 +23,8 @@
 		/** Visually de-emphasized when this register isn't used by the
 		 * current mode (e.g. Input B during a unary operation). */
 		muted?: boolean;
+		/** Brightens the label — this register is the current LOAD destination. */
+		targeted?: boolean;
 		traceChangedIndices?: number[];
 		activeTraceIndex?: number | null;
 		onchange?: (index: number) => void;
@@ -35,6 +37,7 @@
 		disabled = false,
 		emphasized = false,
 		muted = false,
+		targeted = false,
 		traceChangedIndices = [],
 		activeTraceIndex = null,
 		onchange
@@ -44,7 +47,7 @@
 </script>
 
 <div class="register" class:muted>
-	<span class="label">{label}</span>
+	<span class="label" class:targeted>{label}</span>
 	<div class="row">
 		{#each value as _, i (i)}
 			<TritControl
@@ -88,6 +91,11 @@
 		letter-spacing: 0.1em;
 		font-size: 0.8rem;
 		color: var(--label);
+		transition: color 160ms var(--ease-settle);
+	}
+
+	.label.targeted {
+		color: var(--text);
 	}
 
 	.row {
@@ -130,7 +138,8 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.register {
+		.register,
+		.label {
 			transition: none;
 		}
 	}

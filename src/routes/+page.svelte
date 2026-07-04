@@ -58,6 +58,7 @@
 	let a = $state<Trit[]>(zeros());
 	let b = $state<Trit[]>(zeros());
 	let mode = $state<Mode>('ADD');
+	let presetTarget = $state<'A' | 'B'>('A');
 	let visibleTrace = $state<NormalizationTrace>({
 		changedIndices: [],
 		carrySteps: [],
@@ -331,17 +332,23 @@
 			<span class="console-id label">REGISTER CONSOLE 01</span>
 		</header>
 
-		<TritRegister bind:value={a} label="Input A" onchange={traceAfterUpdate} />
+		<TritRegister
+			bind:value={a}
+			label="Input A"
+			targeted={presetTarget === 'A'}
+			onchange={traceAfterUpdate}
+		/>
 		<TritRegister
 			bind:value={b}
 			label="Input B"
 			muted={isUnary}
 			disabled={isUnary}
+			targeted={presetTarget === 'B'}
 			onchange={() => {
 				if (!isUnary) traceAfterUpdate();
 			}}
 		/>
-		<PresetBank width={WIDTH} onload={loadPreset} />
+		<PresetBank width={WIDTH} onload={loadPreset} bind:target={presetTarget} />
 
 		<div class="mode-row">
 			<span class="label">MODE</span>

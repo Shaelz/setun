@@ -7,10 +7,10 @@
 	interface Props {
 		width: number;
 		onload: (target: Target, value: TritRegister, preset: PresetId) => void;
+		target?: Target;
 	}
 
-	let { width, onload }: Props = $props();
-	let target = $state<Target>('A');
+	let { width, onload, target = $bindable('A') }: Props = $props();
 	let lastLoaded = $state<PresetId | null>(null);
 	let targetElement: HTMLDivElement;
 
