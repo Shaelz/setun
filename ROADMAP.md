@@ -42,26 +42,35 @@ parts of the earlier completion claim are reopened:
 A user can load or construct a simple example, perform an operation, and follow
 the result from input trits through normalization without leaving the console.
 
-### 1. Show working for one operation
+### 1. Show working for one operation — shipped
 
-Use the existing normalization trace rather than introducing a second arithmetic
-engine. Start with addition or increment and expose:
+A "SHOW WORKING" disclosure under the result register uses the existing
+normalization trace — no second arithmetic engine — to expose, for ADD, SUB,
+INC, and DEC:
 
 - The raw per-position digit sum
 - Where normalization is required
 - The carry or borrow transferred to the next power
 - The final normalized register
-- A short plain-language explanation alongside the instrument notation
+- A plain-language sentence per changed position, in the same right-to-left,
+  cause-before-effect order the carry pulse animates
 
-The first canonical example should be small and memorable, such as
-`1 + 1 = +- (2 decimal)`.
+MULTIPLY produces the same trace data but is not narrated: its per-position sum
+is a convolution across several trit pairs, not a simple two-input add, so the
+same sentence template would misdescribe the math. NEGATE and the ordered-logic
+modes never produce a trace, and say so rather than showing an empty table.
 
 **Acceptance criteria**
 
-- The explanation is mathematically accurate for carries and borrows.
-- The static explanation contains all information conveyed by animation.
-- A user can replay or step through it without changing the arithmetic result.
-- The default console remains compact; explanation is available on demand.
+- The explanation is mathematically accurate for carries and borrows — the
+  data comes directly from the tested `normalizeTrits`, nothing is recomputed.
+- The static explanation contains all information conveyed by animation — the
+  full per-position list and sentences render before any replay runs.
+- A user can replay it without changing the arithmetic result — replay only
+  moves a local highlight; it never re-invokes an operation or touches A, B,
+  mode, or the live result.
+- The default console remains compact; explanation is available on demand —
+  the disclosure is closed by default, matching the existing reference panel.
 
 ### 2. Reopen mobile register design
 

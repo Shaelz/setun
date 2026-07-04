@@ -3,6 +3,7 @@
 	import InfoPanel from '$lib/components/InfoPanel.svelte';
 	import LogicReadout from '$lib/components/LogicReadout.svelte';
 	import PresetBank from '$lib/components/PresetBank.svelte';
+	import ShowWorking from '$lib/components/ShowWorking.svelte';
 	import TritRegister from '$lib/components/TritRegister.svelte';
 	import OperationSelector, {
 		LOGIC_MODES,
@@ -38,7 +39,8 @@
 	let visibleTrace = $state<NormalizationTrace>({
 		changedIndices: [],
 		carrySteps: [],
-		overflowIndex: null
+		overflowIndex: null,
+		steps: []
 	});
 	let activeTraceIndex = $state<number | null>(null);
 	let statusText = $state('NORMALIZED · NO OVERFLOW');
@@ -60,7 +62,7 @@
 				return {
 					trits: negateBalancedTernary(a),
 					overflow: false,
-					trace: { changedIndices: [], carrySteps: [], overflowIndex: null }
+					trace: { changedIndices: [], carrySteps: [], overflowIndex: null, steps: [] }
 				};
 			case 'INCREMENT':
 				return incrementBalancedTernary(a);
@@ -70,19 +72,19 @@
 				return {
 					trits: ternaryAnd(a, b),
 					overflow: false,
-					trace: { changedIndices: [], carrySteps: [], overflowIndex: null }
+					trace: { changedIndices: [], carrySteps: [], overflowIndex: null, steps: [] }
 				};
 			case 'TERNARY_OR':
 				return {
 					trits: ternaryOr(a, b),
 					overflow: false,
-					trace: { changedIndices: [], carrySteps: [], overflowIndex: null }
+					trace: { changedIndices: [], carrySteps: [], overflowIndex: null, steps: [] }
 				};
 			case 'TERNARY_NOT':
 				return {
 					trits: ternaryNot(a),
 					overflow: false,
-					trace: { changedIndices: [], carrySteps: [], overflowIndex: null }
+					trace: { changedIndices: [], carrySteps: [], overflowIndex: null, steps: [] }
 				};
 			default: {
 				const exhaustive: never = mode;
@@ -161,7 +163,7 @@
 		queueMicrotask(() => {
 			if (isLogic) {
 				if (traceTimer) clearTimeout(traceTimer);
-				visibleTrace = { changedIndices: [], carrySteps: [], overflowIndex: null };
+				visibleTrace = { changedIndices: [], carrySteps: [], overflowIndex: null, steps: [] };
 				activeTraceIndex = null;
 				statusText =
 					mode === 'TERNARY_AND'
@@ -249,6 +251,8 @@
 				RESULT → A
 			</button>
 		</div>
+
+		<ShowWorking {mode} trace={result.trace} overflow={result.overflow} />
 
 		<div class="readout label">
 			<span class="readout-label">DECIMAL</span>

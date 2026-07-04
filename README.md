@@ -60,6 +60,9 @@ leaves thinking: **"Oh. Binary is not inevitable."**
 - Automated tests for arithmetic, normalization, overflow, logic, and presets
 - A linked component exhibit at `/playground/trit-control`, showing the trit
   control in isolation from the full console
+- A "SHOW WORKING" disclosure under the result register, walking ADD, SUB, INC,
+  and DEC through per-position sums, carries, and borrows in plain language,
+  with a replay of the same pace as the live carry pulse
 
 ## Using the console
 
@@ -111,8 +114,10 @@ ternary logic system, not the only possible one.
 
 ## Current limitations
 
-- Carry feedback identifies affected powers and trits, but it does not yet show
-  enough intermediate working to teach normalization to a first-time user.
+- The "SHOW WORKING" walkthrough covers ADD, SUB, INC, and DEC. MULTIPLY still
+  produces the same trace data, but its per-position sum is a convolution, not
+  a simple two-input add, so it is not narrated yet rather than narrated
+  incorrectly. NEGATE and the ordered-logic modes never produce a trace.
 - On narrow screens, registers scroll horizontally to preserve 44 px touch
   targets. This keeps the controls usable but makes the six-position register
   harder to understand as a whole. Mobile completion is therefore reopened.

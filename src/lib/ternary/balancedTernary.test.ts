@@ -181,10 +181,73 @@ describe('normalizeTrits', () => {
 	});
 
 	it('leaves the trace empty when no normalization is needed', () => {
-		expect(normalizeTrits([1, 0, -1], WIDTH).trace).toEqual({
-			changedIndices: [],
-			carrySteps: [],
-			overflowIndex: null
+		const trace = normalizeTrits([1, 0, -1], WIDTH).trace;
+		expect(trace.changedIndices).toEqual([]);
+		expect(trace.carrySteps).toEqual([]);
+		expect(trace.overflowIndex).toBeNull();
+		expect(trace.steps).toEqual([
+			{ power: 0, index: 5, rawSum: 1, carryIn: 0, digit: 1, carryOut: 0 },
+			{ power: 1, index: 4, rawSum: 0, carryIn: 0, digit: 0, carryOut: 0 },
+			{ power: 2, index: 3, rawSum: -1, carryIn: 0, digit: -1, carryOut: 0 }
+		]);
+	});
+});
+
+describe('per-position steps (show-working data)', () => {
+	it('reports a carry for 1 + 1', () => {
+		const result = incrementBalancedTernary(reg(1));
+		expect(balancedTernaryToDecimal(result.trits)).toBe(2);
+		expect(result.trace.steps[0]).toEqual({
+			power: 0,
+			index: 5,
+			rawSum: 2,
+			carryIn: 0,
+			digit: -1,
+			carryOut: 1
+		});
+		expect(result.trace.steps[1]).toEqual({
+			power: 1,
+			index: 4,
+			rawSum: 1,
+			carryIn: 1,
+			digit: 1,
+			carryOut: 0
+		});
+		expect(result.trace.steps).toHaveLength(WIDTH);
+	});
+
+	it('reports a borrow (negative carryOut) for -1 - 1', () => {
+		const result = decrementBalancedTernary(reg(-1));
+		expect(balancedTernaryToDecimal(result.trits)).toBe(-2);
+		expect(result.trace.steps[0]).toEqual({
+			power: 0,
+			index: 5,
+			rawSum: -2,
+			carryIn: 0,
+			digit: 1,
+			carryOut: -1
+		});
+		expect(result.trace.steps[1]).toEqual({
+			power: 1,
+			index: 4,
+			rawSum: -1,
+			carryIn: -1,
+			digit: -1,
+			carryOut: 0
+		});
+	});
+
+	it('reports a step with a null index for the position discarded by overflow', () => {
+		const result = incrementBalancedTernary(reg(364));
+		expect(result.overflow).toBe(true);
+		const overflowStep = result.trace.steps.at(-1);
+		expect(overflowStep).toEqual({
+			power: 6,
+			index: null,
+			rawSum: 1,
+			carryIn: 1,
+			digit: 1,
+			carryOut: 0
 		});
 	});
 });

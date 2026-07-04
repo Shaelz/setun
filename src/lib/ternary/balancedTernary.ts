@@ -11,6 +11,19 @@ export interface CarryStep {
 	amount: number;
 }
 
+/** Everything that happened at a single power-of-three position during normalization. */
+export interface PositionStep {
+	power: number;
+	/** Register position, most-significant-first; null past the register (overflow). */
+	index: number | null;
+	/** Digit sum entering this position, incoming carry included. */
+	rawSum: number;
+	carryIn: number;
+	digit: Trit;
+	/** Signed: negative is a borrow, matching CarryStep.amount. */
+	carryOut: number;
+}
+
 export interface NormalizationTrace {
 	/** In-register indices touched by normalization, ordered right to left. */
 	changedIndices: number[];
@@ -18,6 +31,8 @@ export interface NormalizationTrace {
 	carrySteps: CarryStep[];
 	/** First nonzero power discarded above the register, when overflowing. */
 	overflowIndex: number | null;
+	/** Per-position detail for every position normalizeTrits visited, power ascending. */
+	steps: PositionStep[];
 }
 
 export interface RegisterResult {
@@ -40,14 +55,18 @@ export function normalizeTrits(rawDigits: number[], width: number): RegisterResu
 	const digits: Trit[] = [];
 	const changedIndices = new Set<number>();
 	const carrySteps: CarryStep[] = [];
+	const steps: PositionStep[] = [];
 	let carry = 0;
 	let i = 0;
 	while (i < rawDigits.length || carry !== 0) {
-		const sum = (rawDigits[i] ?? 0) + carry;
+		const carryIn = carry;
+		const sum = (rawDigits[i] ?? 0) + carryIn;
 		const digit = (mod3(sum + 1) - 1) as Trit;
 		const nextCarry = (sum - digit) / 3;
+		const index = i < width ? width - 1 - i : null;
+		steps.push({ power: i, index, rawSum: sum, carryIn, digit, carryOut: nextCarry });
 		if (nextCarry !== 0) {
-			const fromIndex = i < width ? width - 1 - i : null;
+			const fromIndex = index;
 			const toIndex = i + 1 < width ? width - 2 - i : null;
 			if (fromIndex !== null) changedIndices.add(fromIndex);
 			if (toIndex !== null) changedIndices.add(toIndex);
@@ -73,7 +92,7 @@ export function normalizeTrits(rawDigits: number[], width: number): RegisterResu
 	return {
 		trits: truncated.reverse(),
 		overflow,
-		trace: { changedIndices: [...changedIndices], carrySteps, overflowIndex }
+		trace: { changedIndices: [...changedIndices], carrySteps, overflowIndex, steps }
 	};
 }
 
