@@ -130,7 +130,7 @@
 		.row {
 			display: grid;
 			grid-template-columns: repeat(2, max-content);
-			justify-content: center;
+			justify-content: start;
 			gap: 0.6rem 0.75rem;
 			overflow: visible;
 			padding: 2px;
