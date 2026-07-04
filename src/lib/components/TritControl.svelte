@@ -223,12 +223,10 @@
 		   against --panel-2 above 3:1 for all three trit colors. */
 		opacity: 0.65;
 		cursor: pointer;
-		transform: scale(1);
 		transition:
 			opacity 160ms var(--ease-settle),
 			background-color 160ms var(--ease-settle),
-			box-shadow 160ms var(--ease-settle),
-			transform 70ms linear;
+			box-shadow 160ms var(--ease-settle);
 	}
 
 	.control.disabled .cell,
@@ -260,7 +258,6 @@
 	}
 
 	.control:not(.disabled):not(.readonly) .cell:active {
-		transform: translateY(1px);
 		box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.65);
 	}
 
@@ -332,10 +329,6 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.control:not(.disabled):not(.readonly) .cell:active {
-			transform: none;
-		}
-
 		.cell,
 		.corner,
 		.trace-marker {

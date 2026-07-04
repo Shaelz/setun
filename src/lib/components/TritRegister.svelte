@@ -81,6 +81,8 @@
 	.label {
 		flex: 0 0 auto;
 		width: 5.5rem;
+		align-self: flex-start;
+		padding-top: calc(2px + (44px - 1em) / 2);
 		font-family: var(--font-label);
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
@@ -112,6 +114,7 @@
 
 		.label {
 			width: auto;
+			padding-top: 0;
 		}
 
 		.row {

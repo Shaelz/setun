@@ -27,7 +27,7 @@ Current ledger:
 | Recessed wells, machined edges, and lamp glow | Implemented | Used throughout the console |
 | Fixed top-light material model | Implemented | Raised edges catch light above; recessed and pressed surfaces darken inward |
 | Precision markings | Partial | Power labels and console ID ship; ruler ticks and signed-range engraving do not |
-| Grain or vignette | Implemented | Page-wide grain texture; a panel-scoped light vignette (bright above center, darker at the panel's own edges) |
+| Grain or vignette | Implemented | Room grain and vignette sit behind the interface; panel lighting remains scoped to the enamel surface |
 | Carry pulse and static reduced-motion trace | Implemented | Uses domain normalization metadata |
 | Power-on sequence | Candidate | Not implemented and not required for the next milestone |
 | Phosphor-decay readout | Candidate | Not implemented and lower priority than comprehension |
@@ -152,8 +152,8 @@ A physical instrument's most basic visual fact: things are recessed *into* the p
 
 - **Raised surfaces** (`--panel-1` modules): 1px `--line` border plus a 1px `--edge` catch on the top edge — a machined highlight, not a drop shadow.
 - **Inset wells** (`--panel-2`): trit tracks and display windows sit visibly *in* the panel — subtle inner shadow at the top, slightly darker fill. The decimal readout is a recessed display window, darker than the panel around it, its digits faintly luminous.
-- **Implemented -- touch response:** pressing an editable trit briefly deepens its inset shadow and moves it down by 1px, then settles without bounce. Reduced-motion mode keeps the pressure shadow without the movement.
-- **Implemented — texture budget:** a fixed, page-wide SVG grain layer (felt as material, not seen as pattern) plus a vignette scoped to the panel itself — a soft highlight above center fading to a darker edge at the panel's own bounds, as light falling on a physical object rather than a viewport-relative overlay. That is the whole budget: **no** directional brushed-metal highlights, scanlines, scratches, or rust.
+- **Implemented -- touch response:** pressing an editable trit briefly deepens its inset shadow without moving the control or its surrounding layout.
+- **Implemented — texture budget:** a fixed SVG grain and room vignette behind the interface, plus a vignette scoped to the panel itself — a soft highlight above center fading to a darker edge at the panel's own bounds, as light falling on a physical object rather than a viewport-relative overlay. The atmospheric layer never sits over labels, controls, or readouts. That is the whole budget: **no** directional brushed-metal highlights, scanlines, scratches, or rust.
 - **Corner radius 2px maximum.** Machined edges, not rounded candy.
 - **Glow reads as lamp, not neon**: at most a soft halo of the trit's own color at low alpha (~25%, blur ≤ 6px) on an *active* lamp. Never on layout, never stacked.
 - **The result register is more luminous than the inputs** — brighter symbols, slightly stronger halo — as if actively computed rather than dialed in.

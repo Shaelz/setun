@@ -91,14 +91,13 @@ body {
 	-webkit-tap-highlight-color: transparent;
 }
 
-/* AESTHETIC.md candidate: grain, felt rather than seen, plus a room vignette
-   — the desk/background falls off toward the viewport's corners, like the
-   edge of a lamp's throw, so the panel reads as the lit subject. The panel
-   has its own separate, brighter vignette on its own surface below. */
+/* Grain and room vignette sit behind the interface so they shape the
+   environment without dimming labels, controls, or readouts. The panel has
+   its own separate, brighter surface lighting. */
 .atmosphere {
 	position: fixed;
 	inset: 0;
-	z-index: 999;
+	z-index: 0;
 	pointer-events: none;
 	background-image:
 		radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.5) 100%),

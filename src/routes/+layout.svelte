@@ -10,4 +10,13 @@
 </svelte:head>
 
 <div class="atmosphere" aria-hidden="true"></div>
-{@render children()}
+<div class="interface">
+	{@render children()}
+</div>
+
+<style>
+	.interface {
+		position: relative;
+		z-index: 1;
+	}
+</style>
