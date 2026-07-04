@@ -1,6 +1,39 @@
 # Aesthetic
 
-The visual spec for `TRIT//-0+`. The README's [Visual language](README.md#visual-language) section states the intent; this document makes the concrete decisions so the UI exploration track has something to iterate against rather than re-deciding values live. It is meant to be updated when the trit-control iteration loop overturns a decision — spec, not scripture.
+The visual direction and decision record for `TRIT//-0+`. It describes the
+instrument Setun is trying to become, but it is not evidence that every idea has
+shipped. Product behavior and observed usability take precedence when this
+document disagrees with the implementation.
+
+## Decision status
+
+The labels used in this document are:
+
+- **Implemented** — present in the current console and intended to remain.
+- **Partial** — present in a narrower or less successful form than described.
+- **Candidate** — a direction worth testing, not approved implementation work.
+- **Deferred** — intentionally outside the active comprehension milestone.
+- **Rejected** — a named direction the product should not drift toward.
+
+Current ledger:
+
+| Area | Status | Current reality |
+| --- | --- | --- |
+| Alternate laboratory-instrument brief | Implemented | Guides the shipped console |
+| Dark panel, color system, and typography | Implemented | Tokens and local fonts are in use |
+| Three-position trit control | Implemented | Direct input, keyboard support, and state lamps ship |
+| Desktop console layout | Implemented | Wide instrument panel is the strongest layout |
+| Mobile console layout | Partial | Controls remain tappable, but registers hide positions behind horizontal scrolling |
+| Recessed wells, machined edges, and lamp glow | Implemented | Used throughout the console |
+| Precision markings | Partial | Power labels and console ID ship; ruler ticks and signed-range engraving do not |
+| Grain or vignette | Candidate | Not implemented; must earn its visual and performance cost |
+| Carry pulse and static reduced-motion trace | Implemented | Uses domain normalization metadata |
+| Power-on sequence | Candidate | Not implemented and not required for the next milestone |
+| Phosphor-decay readout | Candidate | Not implemented and lower priority than comprehension |
+| Sound | Deferred | No active software or hardware commitment |
+| Alternate visual roads and anti-goals | Rejected | Retained as drift protection |
+
+An unimplemented candidate must not be added merely to make this document true.
 
 ## The brief
 
@@ -106,9 +139,10 @@ A wide instrument panel, not a card-based web app:
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-- **Designed wide, desktop-first**; on mobile the console stacks into vertical register modules. Stacking is a commitment, not an afterthought — the README makes mobile comfort a hard requirement. It never becomes rounded cards.
+- **Implemented on desktop:** a wide instrument panel rather than a card-based web app.
+- **Partial on mobile:** the page stacks its major sections, but each six-trit register currently scrolls horizontally and exposes only part of the register at once. Mobile completion is reopened in [ROADMAP.md](ROADMAP.md); preserving the six-position mental model matters more than preserving the current row implementation. It must not become a pile of generic rounded cards.
 - **Every trit position carries its power-of-three label** (`3⁵` … `3⁰`), tiny, in the condensed sans, `--label`. Panel engraving and passive education in one element.
-- **Precision markings** where they earn their place: ruler ticks along register tracks, `SIGNED RANGE −364 … +364` near the registers, the console number top-right. Sparse — calibration marks, not wallpaper.
+- **Partial — precision markings:** power labels and the console number ship. Ruler ticks and `SIGNED RANGE −364 … +364` engraving remain candidates and should appear only where they improve orientation. Sparse — calibration marks, not wallpaper.
 - **The STATUS line is the instrument's voice**: terse, uppercase, neutral ramp. `NORMALIZED · NO OVERFLOW · CARRY TRACE AVAILABLE`, or `OVERFLOW` with the red lamp lit. No sentences, no exclamation marks.
 
 ## Materials and depth
@@ -117,7 +151,7 @@ A physical instrument's most basic visual fact: things are recessed *into* the p
 
 - **Raised surfaces** (`--panel-1` modules): 1px `--line` border plus a 1px `--edge` catch on the top edge — a machined highlight, not a drop shadow.
 - **Inset wells** (`--panel-2`): trit tracks and display windows sit visibly *in* the panel — subtle inner shadow at the top, slightly darker fill. The decimal readout is a recessed display window, darker than the panel around it, its digits faintly luminous.
-- **Texture budget — spent once**: one extremely subtle grain layer over the panel (felt, never noticed; imperceptible at a glance), optionally a faint vignette. That is the whole budget. **No** directional brushed-metal highlights, no scanlines, no scratches, no rust.
+- **Candidate — texture budget:** if visual testing shows that the current surfaces are too flat, try one extremely subtle grain layer over the panel and optionally a faint vignette. Neither is currently implemented. That is the whole possible budget: **no** directional brushed-metal highlights, scanlines, scratches, or rust.
 - **Corner radius 2px maximum.** Machined edges, not rounded candy.
 - **Glow reads as lamp, not neon**: at most a soft halo of the trit's own color at low alpha (~25%, blur ≤ 6px) on an *active* lamp. Never on layout, never stacked.
 - **The result register is more luminous than the inputs** — brighter symbols, slightly stronger halo — as if actively computed rather than dialed in.
@@ -148,26 +182,27 @@ Requirements:
 ## Focus and accessibility
 
 - Keyboard focus is drawn as **corner brackets** (viewfinder-style ticks in `--focus`) around the focused control — the instrument's way of saying "this channel is selected." Never invisible, never `outline: none` without a replacement, never color-only.
-- Screen-reader labels per the README: position and state (`Input A, trit 4 of 6, currently positive one.`).
+- Each trit exposes an ARIA slider with position in `aria-label` (e.g. `Input A, trit 4 of 6`) and state in `aria-valuetext` (e.g. `positive one`), so a screen reader announces both together.
 - All state changes have a motion-free equivalent (see below).
 
 ## Motion
 
-Three signature moments, and almost nothing else:
+Motion is sparse and subordinate to comprehension:
 
-1. **Power-on** (page load, once). An instrument doesn't fade in — it powers on: lamps flicker to life staggered across the panel, registers settle to zero, the status line reports `NORMALIZED`. Total ≤ 900ms, never blocks interaction, skipped entirely under reduced motion (the console simply appears, on).
-2. **Carry pulse** (the interaction signature). A narrow brightness pulse traveling right-to-left through the register track, like a signal passing through circuitry — ~60ms per trit, once. It shows causality — *this* carry produced *that* trit — then gets out of the way.
-3. **Phosphor decay** (the readout material). When a decimal value changes, the old digits ghost out over ~150ms rather than swapping instantly.
+1. **Candidate — power-on.** A single page-load sequence in which lamps settle to zero and the status line reports `NORMALIZED`. If tested, total duration must stay at or below 900ms, never block interaction, and disappear entirely under reduced motion. This is not implemented and is not active roadmap work.
+2. **Implemented — carry pulse.** A brief right-to-left trace through trits touched by normalization, approximately 60ms per trit, followed by factual status text. The static underline markers preserve the information under reduced motion.
+3. **Candidate — phosphor decay.** Old decimal digits ghost out over approximately 150ms. This is not implemented and should be tested only if it improves the readout's material character without reducing clarity.
 
 Rules:
 
 - Durations 120–240ms for everything else; easing `cubic-bezier(0.2, 0, 0, 1)` — sharp mechanical settle, no bounce, no spring.
-- **`prefers-reduced-motion`**: no power-on, no pulse, no decay. Trits changed by normalization get a static highlight (an underline tick in the trit's color) plus the textual carry explanation. Information-equivalent, motion-free.
+- **`prefers-reduced-motion`**: no power-on, pulse, or decay. Trits changed by normalization get a static highlight (an underline tick in the trit's color) plus textual carry information. Information-equivalent, motion-free behavior is an implemented requirement even when the surrounding motion is only a candidate.
 - Nothing loops, nothing idles, nothing breathes. An instrument at rest is still.
 
 ## Sound
 
-None in v1. The roadmap reserves sound for the physical hardware phase; the software instrument is silent.
+**Deferred.** The software instrument is silent. Sound and physical hardware are
+experiments rather than active roadmap phases.
 
 ## Anti-goals
 
