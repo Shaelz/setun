@@ -80,7 +80,11 @@
 <style>
 	.preset-bank {
 		display: flex;
-		align-items: center;
+		/* flex-start, not center: preset-buttons grows taller than its
+		   siblings when a horizontal scrollbar appears, and centering would
+		   shift the shorter targets/label down to match. Top-aligning keeps
+		   every row's buttons level regardless of scrollbar. */
+		align-items: flex-start;
 		gap: 1rem;
 		min-width: 0;
 	}
@@ -88,6 +92,8 @@
 	.label {
 		flex: 0 0 auto;
 		width: 5.5rem;
+		align-self: flex-start;
+		padding-top: calc(2px + (44px - 1em) / 2);
 		font-family: var(--font-label);
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
@@ -167,6 +173,10 @@
 			flex-direction: column;
 			align-items: stretch;
 			gap: 0.5rem;
+		}
+
+		.label {
+			padding-top: 0;
 		}
 
 		.targets,
