@@ -194,7 +194,9 @@ Requirements:
 ## Focus and accessibility
 
 - Keyboard focus is drawn as **corner brackets** (viewfinder-style ticks in `--focus`) around the focused control — the instrument's way of saying "this channel is selected." Never invisible, never `outline: none` without a replacement, never color-only.
+- Rectangular keys (LOAD, MODE, target, and copy/guided buttons) draw focus as a plain 1px `--focus` outline with a 2px offset instead of corner brackets — brackets are reserved for the trit control. Rows that scroll horizontally (the preset key strip) reserve enough padding around their buttons to keep that outline from being clipped by the scrollport at either end.
 - Each trit exposes an ARIA slider with position in `aria-label` (e.g. `Input A, trit 4 of 6`) and state in `aria-valuetext` (e.g. `positive one`), so a screen reader announces both together.
+- The LOAD row doubles its feedback: selecting A or B brightens that register's `INPUT A`/`INPUT B` label from `--label` to `--text` (a lamp turning on, not a new color), and the most recently loaded preset key keeps the same latched-key treatment as the active MODE key, rather than reverting to its resting state immediately after the click.
 - All state changes have a motion-free equivalent (see below).
 
 ## Motion

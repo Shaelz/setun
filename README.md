@@ -53,7 +53,9 @@ leaves thinking: **"Oh. Binary is not inevitable."**
 - Ordered ternary AND, OR, and NOT using `- < 0 < +`
 - `RESULT -> A` chaining for accumulator-style experiments
 - Carry and borrow trace metadata with brief visual and textual feedback
-- Presets for zero, one, negative one, eight, negative six, limits, and random trits
+- Presets for zero, one, negative one, eight, negative six, limits, and random
+  trits, targeting either Input A or B; the target selector brightens that
+  register's label, and the most recently loaded preset stays visibly marked
 - A compact balanced-ternary reference panel
 - Keyboard-accessible trit controls and operation selectors
 - Reduced-motion equivalents for carry feedback
