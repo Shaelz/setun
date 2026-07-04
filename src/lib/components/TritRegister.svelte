@@ -115,7 +115,7 @@
 			display: grid;
 			grid-template-columns: repeat(2, max-content);
 			justify-content: center;
-			gap: 0.6rem 1.25rem;
+			gap: 0.6rem 0.75rem;
 			overflow: visible;
 			padding: 2px;
 		}

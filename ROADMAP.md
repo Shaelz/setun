@@ -104,24 +104,27 @@ bottom, with no shrinking of the control and no horizontal scroll.
   (`MAX + INC`): the highlight correctly traverses all three grid rows in
   carry order.
 
-### 3. Add one guided experiment
+### 3. Add one guided experiment — shipped
 
-Provide a restrained entry point that demonstrates a property balanced ternary
-handles unusually well. Prefer one strong sequence over a library of tutorials.
+A `GUIDED: 1 + 1 CARRY` control in the footer performs steps 1-3 and opens the
+explanation; steps 4-5 are left to the existing controls rather than scripted,
+because they already work:
 
-Initial candidate:
+1. Load `ONE` into A — automated.
+2. Select `INC` — automated.
+3. Observe `1 + 1` normalize to `+-` — automatic once mode is set; the SHOW
+   WORKING panel opens at the same time so the explanation is immediate.
+4. Copy the result to A and increment again — the existing `RESULT -> A`
+   button and the still-selected `INC` mode do this with no new code.
+5. Explain the carry in powers of three — the SHOW WORKING panel already
+   built for item 1.
 
-1. Load `ONE` into A.
-2. Select `INC`.
-3. Observe `1 + 1` normalize to `+-`.
-4. Copy the result to A and increment again.
-5. Explain the carry in powers of three.
+One button, no wizard chrome, no separate tutorial state machine.
 
-This must feel like operating the instrument, not entering a classroom wizard.
+### 4. Protect the interaction contract — shipped
 
-### 4. Protect the interaction contract
-
-Add a small browser smoke suite covering only high-value behavior:
+A Playwright smoke suite (`e2e/smoke.spec.ts`, `npm run test:e2e`) covers
+exactly the five listed behaviors and nothing more:
 
 - Keyboard-changing a trit
 - Switching between binary and unary modes
@@ -129,7 +132,11 @@ Add a small browser smoke suite covering only high-value behavior:
 - Copying a valid result into A
 - Reaching all six trits at a narrow viewport
 
-Do not pursue exhaustive UI coverage or screenshot-test every visual detail.
+Building this caught a real bug: the 2-column mobile register grid (item 2)
+had a ~6px horizontal overflow at 375px that manual preview-tool measurement
+had missed. Fixed by tightening the grid's column gap and reducing the
+panel's inline padding at narrow widths — verified with Playwright's exact
+CSS-pixel measurements, not just visual inspection.
 
 ### 5. Public playground route — resolved
 
@@ -187,12 +194,22 @@ Before promoting one of these ideas, answer:
 
 The comprehension pass is complete when:
 
-- One representative carry or borrow can be followed step by step.
-- The explanation works with and without motion.
+- One representative carry or borrow can be followed step by step. — Shipped
+  (SHOW WORKING, item 1; the guided `1 + 1` experiment, item 3).
+- The explanation works with and without motion. — Shipped (SHOW WORKING's
+  replay is inert under `prefers-reduced-motion`; the static list carries the
+  same information either way).
 - The six-trit register is discoverable and understandable at narrow widths.
+  — Shipped (item 2: 2-column grid, no horizontal scroll, verified at 375px
+  and 430px).
 - The core keyboard, overflow, chaining, and mobile-reachability flows have
-  automated smoke coverage.
-- README.md, ROADMAP.md, and AESTHETIC.md describe the behavior that actually ships.
+  automated smoke coverage. — Shipped (item 4: `e2e/smoke.spec.ts`).
+- README.md, ROADMAP.md, and AESTHETIC.md describe the behavior that actually
+  ships. — This pass.
 
-Passing tests and fitting inside a viewport are necessary evidence, but they are
-not sufficient proof that the product teaches what it claims to teach.
+All five mechanical criteria above are met. That is not the same claim as "the
+product teaches what it claims to teach" — this document has no way to
+measure whether a first-time user actually walks away understanding
+normalization, only whether the mechanism to show it exists, works, and is
+tested. Whether the hypothesis itself holds is a question for real users, not
+for this checklist.

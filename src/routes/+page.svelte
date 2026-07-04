@@ -23,7 +23,7 @@
 		type Trit,
 		type TritRegister as TritRegisterValue
 	} from '$lib/ternary/balancedTernary';
-	import type { PresetId } from '$lib/ternary/presets';
+	import { presetRegister, type PresetId } from '$lib/ternary/presets';
 	import { ternaryAnd, ternaryNot, ternaryOr } from '$lib/ternary/ternaryLogic';
 
 	const WIDTH = 6;
@@ -45,6 +45,7 @@
 	let activeTraceIndex = $state<number | null>(null);
 	let statusText = $state('NORMALIZED · NO OVERFLOW');
 	let traceTimer: ReturnType<typeof setTimeout> | undefined;
+	let showWorkingOpen = $state(false);
 
 	let isUnary = $derived(UNARY_MODES.has(mode));
 	let isLogic = $derived(LOGIC_MODES.has(mode));
@@ -183,6 +184,16 @@
 		traceAfterUpdate();
 	}
 
+	// The one guided experiment (ROADMAP.md): sets up `1 + 1` and opens the
+	// explanation, then hands back to the ordinary controls — RESULT -> A and
+	// INC already do the rest, so there's nothing further to script.
+	function runGuidedExperiment() {
+		a = presetRegister('ONE', WIDTH);
+		mode = 'INCREMENT';
+		showWorkingOpen = true;
+		traceAfterUpdate();
+	}
+
 	function loadPreset(target: 'A' | 'B', value: TritRegisterValue, preset: PresetId) {
 		if (target === 'A') {
 			a = [...value];
@@ -252,7 +263,7 @@
 			</button>
 		</div>
 
-		<ShowWorking {mode} trace={result.trace} overflow={result.overflow} />
+		<ShowWorking {mode} trace={result.trace} overflow={result.overflow} bind:open={showWorkingOpen} />
 
 		<div class="readout label">
 			<span class="readout-label">DECIMAL</span>
@@ -277,6 +288,9 @@
 		<InfoPanel />
 
 		<footer>
+			<button type="button" class="guided-button" onclick={runGuidedExperiment}>
+				GUIDED: 1 + 1 CARRY
+			</button>
 			<a class="exhibit-link" href="/playground/trit-control">COMPONENT EXHIBIT: TRIT CONTROL →</a>
 		</footer>
 	</div>
@@ -390,6 +404,12 @@
 			align-self: center;
 			margin-left: 0;
 		}
+
+		/* Two full-size trit controls (~136px each) need real headroom at
+		   375-430px; the desktop padding leaves only a few px to spare. */
+		.panel {
+			padding-inline: 1rem;
+		}
 	}
 
 	.readout,
@@ -427,9 +447,40 @@
 
 	footer {
 		display: flex;
-		justify-content: flex-end;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.5rem 1rem;
 		padding-top: 0.5rem;
 		border-top: 1px solid var(--line);
+	}
+
+	.guided-button {
+		appearance: none;
+		border: 1px solid var(--line);
+		background: var(--panel-2);
+		color: var(--label);
+		font-family: var(--font-label);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.7rem;
+		min-height: 44px;
+		padding: 0.4rem 0.75rem;
+		border-radius: 2px;
+		cursor: pointer;
+		transition:
+			color 160ms var(--ease-settle),
+			border-color 160ms var(--ease-settle);
+	}
+
+	.guided-button:hover {
+		color: var(--text);
+		border-color: var(--edge);
+	}
+
+	.guided-button:focus-visible {
+		outline: 1px solid var(--focus);
+		outline-offset: 2px;
 	}
 
 	.exhibit-link {
@@ -457,7 +508,8 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.copy-button {
+		.copy-button,
+		.guided-button {
 			transition: none;
 		}
 	}

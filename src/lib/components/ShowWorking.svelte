@@ -6,9 +6,12 @@
 		mode: Mode;
 		trace: NormalizationTrace;
 		overflow: boolean;
+		/** Bindable so the console can open this on demand (e.g. the guided
+		 * experiment) without a second click; native toggling still works. */
+		open?: boolean;
 	}
 
-	let { mode, trace, overflow }: Props = $props();
+	let { mode, trace, overflow, open = $bindable(false) }: Props = $props();
 
 	/** These four reduce to the same per-position "trit + trit (+ carry-in)"
 	 * quantity before normalization runs — SUB negates B first, DEC subtracts
@@ -108,7 +111,7 @@
 	}
 </script>
 
-<details class="show-working">
+<details class="show-working" bind:open>
 	<summary>
 		<span>WORKING</span>
 		<span class="summary-title">SHOW WORKING</span>

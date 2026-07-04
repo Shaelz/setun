@@ -65,6 +65,11 @@ leaves thinking: **"Oh. Binary is not inevitable."**
   with a replay of the same pace as the live carry pulse
 - Registers that stay fully visible at narrow widths: a 2-column grid of all
   six trits rather than a horizontally scrolling row
+- A `GUIDED: 1 + 1 CARRY` control that loads the canonical example, selects
+  INC, and opens SHOW WORKING in one step; `RESULT -> A` and INC already
+  handle continuing the sequence
+- A Playwright smoke suite covering keyboard input, mode switching, overflow,
+  copying a result, and mobile reachability
 
 ## Using the console
 
@@ -120,8 +125,9 @@ ternary logic system, not the only possible one.
   produces the same trace data, but its per-position sum is a convolution, not
   a simple two-input add, so it is not narrated yet rather than narrated
   incorrectly. NEGATE and the ordered-logic modes never produce a trace.
-- Keyboard, reduced-motion, and responsive behavior have been checked manually;
-  the automated suite currently covers the domain logic rather than browser flows.
+- Reduced-motion behavior has been checked manually. Keyboard interaction,
+  mode switching, overflow, chaining, and mobile reachability now have
+  automated browser coverage instead (`npm run test:e2e`).
 
 See [ROADMAP.md](ROADMAP.md) for the comprehension-first next milestone and
 [AESTHETIC.md](AESTHETIC.md) for the visual direction and implementation-status
@@ -142,6 +148,7 @@ Useful verification commands:
 npm test
 npm run check
 npm run build
+npm run test:e2e
 ```
 
 The app is a prerendered SvelteKit site deployed with the Vercel adapter. It has
@@ -150,6 +157,7 @@ no backend, accounts, persistence, analytics, or network-dependent arithmetic.
 ## Code map
 
 ```text
+e2e/               Playwright smoke suite (npm run test:e2e)
 src/
   lib/
     ternary/       balanced-ternary arithmetic, logic, presets, and tests
