@@ -297,7 +297,13 @@
 		gap: 1.1rem;
 		width: min(100%, 66rem);
 		padding: 1.5rem 1.75rem;
-		background: var(--panel-1);
+		/* Light falling on the physical casing, not a viewport-relative
+		   overlay: a soft highlight above center fading to a darker edge,
+		   vignetted to the panel's own bounds. */
+		background-color: var(--panel-1);
+		background-image:
+			radial-gradient(ellipse 70% 55% at 50% 10%, rgba(255, 255, 255, 0.06), transparent 65%),
+			radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.4) 100%);
 		border: 1px solid var(--line);
 		border-top-color: var(--edge);
 		border-radius: 2px;

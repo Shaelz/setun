@@ -9,4 +9,5 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
+<div class="atmosphere" aria-hidden="true"></div>
 {@render children()}
