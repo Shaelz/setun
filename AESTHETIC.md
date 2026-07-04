@@ -23,7 +23,7 @@ Current ledger:
 | Dark panel, color system, and typography | Implemented | Tokens and local fonts are in use |
 | Three-position trit control | Implemented | Direct input, keyboard support, and state lamps ship |
 | Desktop console layout | Implemented | Wide instrument panel is the strongest layout |
-| Mobile console layout | Partial | Controls remain tappable, but registers hide positions behind horizontal scrolling |
+| Mobile console layout | Implemented | Registers wrap into a fully visible 2-column grid rather than scrolling |
 | Recessed wells, machined edges, and lamp glow | Implemented | Used throughout the console |
 | Precision markings | Partial | Power labels and console ID ship; ruler ticks and signed-range engraving do not |
 | Grain or vignette | Implemented | Page-wide grain texture; a panel-scoped light vignette (bright above center, darker at the panel's own edges) |
@@ -140,7 +140,7 @@ A wide instrument panel, not a card-based web app:
 ```
 
 - **Implemented on desktop:** a wide instrument panel rather than a card-based web app.
-- **Partial on mobile:** the page stacks its major sections, but each six-trit register currently scrolls horizontally and exposes only part of the register at once. Mobile completion is reopened in [ROADMAP.md](ROADMAP.md); preserving the six-position mental model matters more than preserving the current row implementation. It must not become a pile of generic rounded cards.
+- **Implemented on mobile:** the page stacks its major sections, and each six-trit register wraps into a 2-column, 3-row grid rather than scrolling — each trit control is a full three-position switch (~136px), so at 375–430px only two fit per row regardless of label reservation; three-per-row would require shrinking below the 44px touch-target floor. All six positions stay visible at once. It must not become a pile of generic rounded cards.
 - **Every trit position carries its power-of-three label** (`3⁵` … `3⁰`), tiny, in the condensed sans, `--label`. Panel engraving and passive education in one element.
 - **Partial — precision markings:** power labels and the console number ship. Ruler ticks and `SIGNED RANGE −364 … +364` engraving remain candidates and should appear only where they improve orientation. Sparse — calibration marks, not wallpaper.
 - **The STATUS line is the instrument's voice**: terse, uppercase, neutral ramp. `NORMALIZED · NO OVERFLOW · CARRY TRACE AVAILABLE`, or `OVERFLOW` with the red lamp lit. No sentences, no exclamation marks.

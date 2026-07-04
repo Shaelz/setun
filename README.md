@@ -63,6 +63,8 @@ leaves thinking: **"Oh. Binary is not inevitable."**
 - A "SHOW WORKING" disclosure under the result register, walking ADD, SUB, INC,
   and DEC through per-position sums, carries, and borrows in plain language,
   with a replay of the same pace as the live carry pulse
+- Registers that stay fully visible at narrow widths: a 2-column grid of all
+  six trits rather than a horizontally scrolling row
 
 ## Using the console
 
@@ -118,9 +120,6 @@ ternary logic system, not the only possible one.
   produces the same trace data, but its per-position sum is a convolution, not
   a simple two-input add, so it is not narrated yet rather than narrated
   incorrectly. NEGATE and the ordered-logic modes never produce a trace.
-- On narrow screens, registers scroll horizontally to preserve 44 px touch
-  targets. This keeps the controls usable but makes the six-position register
-  harder to understand as a whole. Mobile completion is therefore reopened.
 - Keyboard, reduced-motion, and responsive behavior have been checked manually;
   the automated suite currently covers the domain logic rather than browser flows.
 

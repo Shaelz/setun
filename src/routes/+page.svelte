@@ -385,6 +385,13 @@
 		cursor: default;
 	}
 
+	@media (max-width: 42rem) {
+		.copy-button {
+			align-self: center;
+			margin-left: 0;
+		}
+	}
+
 	.readout,
 	.status {
 		font-family: var(--font-data);

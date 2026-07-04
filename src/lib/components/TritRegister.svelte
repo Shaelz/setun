@@ -95,6 +95,32 @@
 		padding: 2px 2px 6px;
 	}
 
+	/* Each trit control is a full three-way switch (~136px), not a single
+	   44px button — at 375-430px widths, even with the label column removed,
+	   at most two fit per row. A 2-column grid keeps all six positions
+	   visible with no horizontal scroll, rather than fitting three across by
+	   shrinking below the 44px touch-target floor. */
+	@media (max-width: 42rem) {
+		.register {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 0.5rem;
+		}
+
+		.label {
+			width: auto;
+		}
+
+		.row {
+			display: grid;
+			grid-template-columns: repeat(2, max-content);
+			justify-content: center;
+			gap: 0.6rem 1.25rem;
+			overflow: visible;
+			padding: 2px;
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.register {
 			transition: none;

@@ -28,12 +28,16 @@ The current console implements:
 - Reduced-motion feedback for normalization traces
 
 This is a complete functional baseline, not the end of the product work. Two
-parts of the earlier completion claim are reopened:
+parts of the earlier completion claim were reopened:
 
-1. **Comprehension:** carry feedback is accurate but too terse to teach the
-   normalization process by itself.
-2. **Mobile:** horizontal scrolling preserves control size but hides most of a
+1. **Comprehension:** carry feedback was accurate but too terse to teach the
+   normalization process by itself. The SHOW WORKING disclosure (below)
+   addresses this for ADD, SUB, INC, and DEC; the guided experiment and smoke
+   coverage items are still open.
+2. **Mobile:** horizontal scrolling preserved control size but hid most of a
    six-trit register, weakening positional comparison and carry visibility.
+   Resolved — registers now wrap into a fully visible 2-column grid at narrow
+   widths instead of scrolling.
 
 ## Next milestone: comprehension pass
 
@@ -72,25 +76,33 @@ modes never produce a trace, and say so rather than showing an empty table.
 - The default console remains compact; explanation is available on demand —
   the disclosure is closed by default, matching the existing reference panel.
 
-### 2. Reopen mobile register design
+### 2. Reopen mobile register design — shipped
 
-The goal is to keep the full register mentally legible while retaining tappable
-controls. Explore the smallest viable options before changing the trit control:
-
-- A compact mobile-only trit control that keeps all six positions visible
-- Two clearly connected groups of three trits
-- Scroll snapping with edge fades, position context, and an explicit scroll cue
+Measurement first: each trit control is a full three-position switch (~136px
+wide), not a single 44px button. At 375–430px, even with the label column
+removed, at most two full controls fit per row — three-per-row is
+geometrically impossible without shrinking below the 44px touch-target floor,
+at either width. So instead of "two groups of three," registers wrap into a
+2-column grid at ≤42rem viewports: three rows of two, MSD to LSD, top to
+bottom, with no shrinking of the control and no horizontal scroll.
 
 **Acceptance criteria**
 
-- At 375 px and 430 px, users can discover and reach all six trits.
-- The interface communicates that each register contains six positions.
-- Power labels remain associated with the correct trits.
-- Comparing A, B, and result does not require guesswork about hidden positions.
-- Touch targets remain at least 44 px unless an equally accessible interaction
-  replaces the current three-button control.
-- Carry feedback remains understandable when affected trits cross a viewport or
-  group boundary.
+- At 375 px and 430 px, users can discover and reach all six trits — confirmed
+  by measuring `scrollWidth`/`clientWidth` on the register row at both widths:
+  no overflow, nothing to scroll.
+- The interface communicates that each register contains six positions — all
+  six controls are visible at once, grouped as one register block.
+- Power labels remain associated with the correct trits — unchanged, each
+  control keeps its own `3ⁿ` label directly beneath it.
+- Comparing A, B, and result does not require guesswork about hidden
+  positions — nothing is hidden at these widths.
+- Touch targets remain at least 44 px — unchanged; only the wrapping layout
+  changed, not the control itself.
+- Carry feedback remains understandable when affected trits cross a viewport
+  or group boundary — verified with a full six-position overflow chain
+  (`MAX + INC`): the highlight correctly traverses all three grid rows in
+  carry order.
 
 ### 3. Add one guided experiment
 
