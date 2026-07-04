@@ -11,9 +11,11 @@
 
 	let { width, onload }: Props = $props();
 	let target = $state<Target>('A');
+	let lastLoaded = $state<PresetId | null>(null);
 	let targetElement: HTMLDivElement;
 
 	function load(id: PresetId) {
+		lastLoaded = id;
 		onload(target, presetRegister(id, width), id);
 	}
 
@@ -67,6 +69,7 @@
 		{#each PRESETS as preset (preset.id)}
 			<button
 				type="button"
+				class:active={lastLoaded === preset.id}
 				aria-label={`Load ${preset.label} into Input ${target}`}
 				onclick={() => load(preset.id)}>{preset.label}</button
 			>
