@@ -99,6 +99,7 @@
 	.preset-buttons {
 		display: flex;
 		gap: var(--key-gap);
+		padding-left: 4px;
 	}
 
 	.preset-buttons {

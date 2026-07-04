@@ -107,6 +107,7 @@
 		display: flex;
 		gap: var(--key-gap);
 		flex-wrap: wrap;
+		padding-left: 4px;
 	}
 
 	.option {
