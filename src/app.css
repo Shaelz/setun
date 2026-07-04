@@ -7,6 +7,18 @@
 :root {
 	color-scheme: dark;
 
+	/*
+	 * Material lighting contract
+	 *
+	 * Light falls from above.
+	 * - Raised enamel surfaces catch light on their top edge.
+	 * - Recessed wells darken along their top inner edge.
+	 * - Interactive pressure deepens that recess briefly.
+	 * - Highlights and shadows must never imply light from below.
+	 *
+	 * One authored material and one fixed light source: no glass, floating
+	 * shadows, environmental reflections, or adaptive lighting.
+	 */
 	/* Surfaces — grey-green enamel ramp */
 	--panel-0: #121412; /* page background */
 	--panel-1: #1a1d1a; /* raised module face (registers, mode block) */

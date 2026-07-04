@@ -395,12 +395,12 @@
 			bind:open={showWorkingOpen}
 		/>
 
-		<div class="readout label">
+		<div class="readout">
 			<span class="readout-label">DECIMAL</span>
-			<span class="values"
+			<output class="values readout-window"
 				>A: {decimalA}&nbsp;&nbsp;&nbsp;B: {decimalB}&nbsp;&nbsp;&nbsp;RESULT: {result.overflow
 					? 'OVERFLOW'
-					: decimalResult}</span
+					: decimalResult}</output
 			>
 		</div>
 
@@ -580,6 +580,20 @@
 		color: var(--label);
 		flex: 0 0 auto;
 		width: 5.5rem;
+	}
+
+	.readout-window {
+		padding: 0.55rem 0.7rem;
+		background: var(--panel-2);
+		border: 1px solid var(--line);
+		border-bottom-color: var(--edge);
+		border-radius: 2px;
+		color: var(--text);
+		font-variant-numeric: tabular-nums;
+		box-shadow:
+			inset 0 2px 4px rgba(0, 0, 0, 0.5),
+			inset 0 -1px rgba(255, 255, 255, 0.025);
+		text-shadow: 0 0 4px rgba(217, 215, 203, 0.12);
 	}
 
 	.status {

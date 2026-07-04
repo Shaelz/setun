@@ -228,7 +228,7 @@
 			opacity 160ms var(--ease-settle),
 			background-color 160ms var(--ease-settle),
 			box-shadow 160ms var(--ease-settle),
-			transform 80ms var(--ease-settle);
+			transform 70ms linear;
 	}
 
 	.control.disabled .cell,
@@ -260,7 +260,14 @@
 	}
 
 	.control:not(.disabled):not(.readonly) .cell:active {
-		transform: scale(0.94);
+		transform: translateY(1px);
+		box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.65);
+	}
+
+	.control:not(.disabled):not(.readonly) .cell.selected:active {
+		box-shadow:
+			inset 0 3px 5px rgba(0, 0, 0, 0.65),
+			inset 0 0 8px color-mix(in srgb, currentColor 35%, transparent);
 	}
 
 	/* Result register reads as "actively computed": brighter at rest, and a
@@ -325,6 +332,10 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
+		.control:not(.disabled):not(.readonly) .cell:active {
+			transform: none;
+		}
+
 		.cell,
 		.corner,
 		.trace-marker {
