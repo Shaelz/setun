@@ -314,9 +314,9 @@
 		letter-spacing: 0.08em;
 	}
 
-	.row-label,
-	.corner-label {
-		justify-items: start !important;
+	.working-grid > span.row-label,
+	.working-grid > span.corner-label {
+		justify-items: start;
 		padding-left: 0.2rem;
 	}
 

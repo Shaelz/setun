@@ -118,8 +118,9 @@
 		color: var(--label);
 	}
 
-	.row-label {
-		justify-items: start !important;
+	.logic-grid > span.row-label,
+	.logic-grid > span.corner-label {
+		justify-items: start;
 		padding-left: 0.2rem;
 	}
 
@@ -128,8 +129,6 @@
 	}
 
 	.corner-label {
-		place-items: center start !important;
-		padding-left: 0.2rem;
 		border-bottom: 1px solid var(--line);
 	}
 
