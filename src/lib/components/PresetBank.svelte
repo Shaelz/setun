@@ -95,7 +95,7 @@
 	.targets,
 	.preset-buttons {
 		display: flex;
-		gap: 0.3rem;
+		gap: var(--key-gap);
 	}
 
 	.preset-buttons {
@@ -116,7 +116,8 @@
 		font-family: var(--font-label);
 		font-size: 0.7rem;
 		letter-spacing: 0.07em;
-		padding: 0.35rem 0.6rem;
+		width: var(--preset-key-width);
+		padding: 0.35rem 0.25rem;
 		cursor: pointer;
 		transition:
 			color 120ms var(--ease-settle),
@@ -152,8 +153,8 @@
 	}
 
 	.targets button {
-		min-width: 44px;
-		padding-inline: 0.4rem;
+		width: var(--key-width);
+		padding-inline: 0;
 	}
 
 	@media (max-width: 42rem) {

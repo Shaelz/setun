@@ -585,6 +585,7 @@
 		letter-spacing: 0.06em;
 		color: var(--text);
 		display: flex;
+		align-items: center;
 		gap: 0.75rem;
 		flex-wrap: wrap;
 	}
@@ -606,6 +607,11 @@
 		border-bottom-color: var(--edge);
 		border-radius: 2px;
 		color: var(--text);
+		font-family: var(--font-label);
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1;
+		letter-spacing: 0.08em;
 		font-variant-numeric: tabular-nums;
 		box-shadow: var(--shadow-recessed);
 		text-shadow: var(--glow-readout);

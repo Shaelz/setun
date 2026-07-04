@@ -105,7 +105,7 @@
 <style>
 	.selector {
 		display: flex;
-		gap: 0.4rem;
+		gap: var(--key-gap);
 		flex-wrap: wrap;
 	}
 
@@ -119,9 +119,9 @@
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
 		font-size: 0.75rem;
-		min-width: 44px;
+		width: var(--key-width);
 		min-height: 44px;
-		padding: 0.4rem 0.75rem;
+		padding: 0.4rem 0;
 		border-radius: 2px;
 		cursor: pointer;
 		transition:

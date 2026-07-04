@@ -112,9 +112,9 @@ Rules:
 Two families, as on real instrument faceplates — a condensed technical sans for the panel, a monospace for the machine:
 
 - **Panel labels and headings**: a DIN-flavored condensed sans. First choice **Barlow Condensed**; alternates Archivo Narrow, Saira Condensed. Small (11–13px), uppercase, letter-spaced (+0.08 to +0.12em), `--label`. This is the "engraved" text: `INPUT A`, `MODE`, `STATUS`, `SIGNED RANGE −364 … +364`.
-- **Data**: a monospace with more character than the dev-tool defaults. First choice **Martian Mono**; alternate IBM Plex Mono. Used for trit symbols, decimal values, powers of three, and diagnostic text.
+- **Data**: a monospace with more character than the dev-tool defaults. First choice **Martian Mono**; alternate IBM Plex Mono. Used for trit symbols, powers of three, and diagnostic text.
 - **Trit symbols** are the load-bearing glyphs: large, weight 500–600, true typographic characters — `−` (U+2212), not hyphen — so `−` and `+` match in width and weight.
-- **Decimal readout**: large, `--text`, tabular figures. No seven-segment font — that's calculator cosplay, and this instrument is not a calculator.
+- **Decimal readout**: Barlow Condensed at weight 600, `--text`, with tabular figures. It reads like a purpose-built instrument inscription rather than terminal output. No seven-segment font — that's calculator cosplay, and this instrument is not a calculator.
 - **Wordmark**: the condensed sans at heavy weight, plain and confident. **No faux-Cyrillic display type** — that's the propaganda cosplay we stripped out.
 
 ```
@@ -162,6 +162,7 @@ A physical instrument's most basic visual fact: things are recessed *into* the p
 - **Recessed well** (`--panel-2`, `--shadow-recessed`): trit tracks, selected/latching keys, disclosure panels, and logic tables use a dark top inner shadow with a faint lower reflection.
 - **Illuminated aperture** (`--panel-2`, `--shadow-recessed`, restrained glow): decimal and computed readouts use the same recess geometry, adding light only to the information being emitted.
 - **Implemented -- pressure response:** pointer presses on any physical button and keyboard presses on trit controls temporarily use `--shadow-pressed`; editable trits preserve their state-color glow above that pressure shadow. Press feedback never moves the control or its surrounding layout.
+- **Modular key rhythm:** operation and A/B target keys share one fixed width and gap; preset keys use one wider fixed module so short and long labels remain orderly without becoming cramped.
 - **Implemented — texture budget:** a fixed SVG grain and room vignette behind the interface, plus a vignette scoped to the panel itself — a soft highlight above center fading to a darker edge at the panel's own bounds, as light falling on a physical object rather than a viewport-relative overlay. The atmospheric layer never sits over labels, controls, or readouts. That is the whole budget: **no** directional brushed-metal highlights, scanlines, scratches, or rust.
 - **Corner radius 2px maximum.** Machined edges, not rounded candy.
 - **Glow reads as lamp, not neon**: at most a soft halo of the trit's own color at low alpha (~25%, blur ≤ 6px) on an *active* lamp. Never on layout, never stacked.

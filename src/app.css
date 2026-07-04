@@ -30,6 +30,9 @@
 	--shadow-recessed: inset 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 -1px var(--reflection);
 	--shadow-pressed: inset 0 3px 5px rgba(0, 0, 0, 0.65), inset 0 -1px var(--reflection);
 	--glow-readout: 0 0 4px rgba(217, 215, 203, 0.12);
+	--key-gap: 0.4rem;
+	--key-width: 3rem;
+	--preset-key-width: 4rem;
 
 	/* Text */
 	--label: #8f9188; /* engraved section labels */
