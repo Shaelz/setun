@@ -99,13 +99,13 @@ body {
 	-webkit-tap-highlight-color: transparent;
 }
 
-/* Grain and room vignette sit behind the interface so they shape the
-   environment without dimming labels, controls, or readouts. The panel has
-   its own separate, brighter surface lighting. */
+/* Grain and room vignette sit over environmental surfaces but below page
+	 content. Panel content uses its own raised inner layer, so the atmosphere
+	 reaches the enamel without dimming labels, controls, or readouts. */
 .atmosphere {
 	position: fixed;
 	inset: 0;
-	z-index: 0;
+	z-index: 2;
 	pointer-events: none;
 	background-image:
 		radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.5) 100%),

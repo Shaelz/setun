@@ -27,7 +27,7 @@ Current ledger:
 | Recessed wells, machined edges, and lamp glow | Implemented | Used throughout the console |
 | Fixed top-light material model | Implemented | Raised edges catch light above; recessed and pressed surfaces darken inward |
 | Precision markings | Partial | Power labels and console ID ship; ruler ticks and signed-range engraving do not |
-| Grain or vignette | Implemented | Room grain and vignette sit behind the interface; panel lighting remains scoped to the enamel surface |
+| Grain or vignette | Implemented | Room grain and vignette cross both environmental and panel surfaces while content remains on a clean upper layer |
 | Carry pulse and static reduced-motion trace | Implemented | Uses domain normalization metadata |
 | Power-on sequence | Candidate | Not implemented and not required for the next milestone |
 | Phosphor-decay readout | Candidate | Not implemented and lower priority than comprehension |
@@ -163,7 +163,7 @@ A physical instrument's most basic visual fact: things are recessed *into* the p
 - **Illuminated aperture** (`--panel-2`, `--shadow-recessed`, restrained glow): decimal and computed readouts use the same recess geometry, adding light only to the information being emitted.
 - **Implemented -- pressure response:** pointer presses on any physical button and keyboard presses on trit controls temporarily use `--shadow-pressed`; editable trits preserve their state-color glow above that pressure shadow. Press feedback never moves the control or its surrounding layout.
 - **Modular key rhythm:** operation and A/B target keys share one fixed width and gap; preset keys use one wider fixed module so short and long labels remain orderly without becoming cramped.
-- **Implemented — texture budget:** a fixed SVG grain and room vignette behind the interface, plus a vignette scoped to the panel itself — a soft highlight above center fading to a darker edge at the panel's own bounds, as light falling on a physical object rather than a viewport-relative overlay. The atmospheric layer never sits over labels, controls, or readouts. That is the whole budget: **no** directional brushed-metal highlights, scanlines, scratches, or rust.
+- **Implemented — texture budget:** a fixed SVG grain and room vignette crosses both the environmental background and the panel enamel, while a raised `panel-inner` layer keeps it below labels, controls, and readouts. The panel also has its own scoped light vignette — a soft highlight above center fading to a darker edge at the panel's bounds. That is the whole budget: **no** directional brushed-metal highlights, scanlines, scratches, or rust.
 - **Corner radius 2px maximum.** Machined edges, not rounded candy.
 - **Glow reads as lamp, not neon**: at most a soft halo of the trit's own color at low alpha (~25%, blur ≤ 6px) on an *active* lamp. Never on layout, never stacked.
 - **The result register is more luminous than the inputs** — brighter symbols, slightly stronger halo — as if actively computed rather than dialed in.

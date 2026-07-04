@@ -325,6 +325,7 @@
 
 <main>
 	<div class="panel">
+		<div class="panel-inner">
 		<header>
 			<h1>TRIT//-0+</h1>
 			<span class="console-id label">REGISTER CONSOLE 01</span>
@@ -423,6 +424,7 @@
 			</button>
 			<a class="exhibit-link" href="/playground/trit-control">COMPONENT EXHIBIT: TRIT CONTROL →</a>
 		</footer>
+		</div>
 	</div>
 </main>
 
@@ -436,11 +438,7 @@
 	}
 
 	.panel {
-		display: flex;
-		flex-direction: column;
-		gap: 1.1rem;
 		width: min(100%, 66rem);
-		padding: 1.5rem 1.75rem;
 		/* Light falling on the physical casing, not a viewport-relative
 		   overlay: a soft highlight above center fading to a darker edge,
 		   vignetted to the panel's own bounds. */
@@ -452,6 +450,15 @@
 		box-shadow: var(--shadow-raised);
 		border-radius: 2px;
 		margin-block: 0;
+	}
+
+	.panel-inner {
+		position: relative;
+		z-index: 3;
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
+		padding: 1.5rem 1.75rem;
 	}
 
 	header {
@@ -573,7 +580,7 @@
 
 		/* Two full-size trit controls (~136px each) need real headroom at
 		   375-430px; the desktop padding leaves only a few px to spare. */
-		.panel {
+		.panel-inner {
 			padding-inline: 1rem;
 		}
 	}
@@ -586,7 +593,7 @@
 		color: var(--text);
 		display: flex;
 		align-items: center;
-		gap: 0.75rem;
+		gap: 1rem;
 		flex-wrap: wrap;
 	}
 

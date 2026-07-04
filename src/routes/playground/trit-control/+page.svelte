@@ -67,6 +67,8 @@
 
 <style>
 	main {
+		position: relative;
+		z-index: 3;
 		min-height: 100vh;
 		display: flex;
 		flex-direction: column;

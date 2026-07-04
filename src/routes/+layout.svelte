@@ -13,10 +13,3 @@
 <div class="interface">
 	{@render children()}
 </div>
-
-<style>
-	.interface {
-		position: relative;
-		z-index: 1;
-	}
-</style>
