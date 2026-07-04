@@ -78,7 +78,7 @@
 	.preset-bank {
 		display: flex;
 		align-items: center;
-		gap: 0.65rem;
+		gap: 1rem;
 		min-width: 0;
 	}
 
@@ -111,6 +111,7 @@
 		border: 1px solid var(--line);
 		border-radius: 2px;
 		background: var(--panel-1);
+		box-shadow: var(--shadow-raised);
 		color: var(--label);
 		font-family: var(--font-label);
 		font-size: 0.7rem;
@@ -120,14 +121,18 @@
 		transition:
 			color 120ms var(--ease-settle),
 			border-color 120ms var(--ease-settle),
-			background-color 120ms var(--ease-settle);
+			background-color 120ms var(--ease-settle),
+			box-shadow 120ms var(--ease-settle);
 	}
 
-	button:hover,
+	button:hover {
+		color: var(--text);
+		border-color: var(--line);
+	}
+
 	button:focus-visible,
 	button.active {
 		color: var(--text);
-		border-color: var(--text);
 	}
 
 	button:focus-visible {
@@ -137,6 +142,13 @@
 
 	button.active {
 		background: var(--panel-2);
+		border-color: var(--text);
+		box-shadow: var(--shadow-recessed);
+	}
+
+	button:active {
+		background: var(--panel-2);
+		box-shadow: var(--shadow-pressed);
 	}
 
 	.targets button {
@@ -146,13 +158,19 @@
 
 	@media (max-width: 42rem) {
 		.preset-bank {
-			align-items: flex-start;
+			flex-direction: column;
+			align-items: stretch;
+			gap: 0.5rem;
+		}
+
+		.targets,
+		.preset-buttons {
 			flex-wrap: wrap;
 		}
 
 		.preset-buttons {
-			flex-basis: 100%;
-			margin-left: 6.15rem;
+			overflow: visible;
+			padding-inline: 0;
 		}
 	}
 

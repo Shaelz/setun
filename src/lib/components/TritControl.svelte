@@ -40,6 +40,7 @@
 
 	let interactive = $derived(!disabled && !readonly);
 	let rootEl: HTMLDivElement;
+	let keyboardPressed = $state<Trit | null>(null);
 
 	function set(next: Trit) {
 		if (!interactive || next === value) return;
@@ -49,27 +50,34 @@
 
 	function onkeydown(event: KeyboardEvent) {
 		if (!interactive) return;
+		let next: Trit;
 		switch (event.key) {
 			case 'ArrowLeft':
-				set(Math.max(-1, value - 1) as Trit);
+				next = Math.max(-1, value - 1) as Trit;
 				break;
 			case 'ArrowRight':
-				set(Math.min(1, value + 1) as Trit);
+				next = Math.min(1, value + 1) as Trit;
 				break;
 			case '-':
-				set(-1);
+				next = -1;
 				break;
 			case '0':
-				set(0);
+				next = 0;
 				break;
 			case '+':
 			case '=':
-				set(1);
+				next = 1;
 				break;
 			default:
 				return;
 		}
+		keyboardPressed = next;
+		set(next);
 		event.preventDefault();
+	}
+
+	function releaseKeyboardPress() {
+		keyboardPressed = null;
 	}
 
 	// Cells are tabindex="-1" (the slider role is the single tab stop) but a
@@ -105,6 +113,8 @@
 		aria-readonly={readonly}
 		tabindex={interactive ? 0 : -1}
 		{onkeydown}
+		onkeyup={releaseKeyboardPress}
+		onblur={releaseKeyboardPress}
 	>
 		<span class="corner corner-tl" aria-hidden="true"></span>
 		<span class="corner corner-tr" aria-hidden="true"></span>
@@ -119,6 +129,7 @@
 					type="button"
 					class="cell trit-{position}"
 					class:selected={value === position}
+					class:keyboard-pressed={keyboardPressed === position}
 					tabindex="-1"
 					aria-hidden="true"
 					onmousedown={onCellMousedown}
@@ -199,7 +210,7 @@
 		background: var(--panel-2);
 		border: 1px solid var(--line);
 		border-radius: 2px;
-		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+		box-shadow: var(--shadow-recessed);
 		overflow: hidden;
 	}
 
@@ -257,13 +268,15 @@
 		background: color-mix(in srgb, currentColor 10%, transparent);
 	}
 
-	.control:not(.disabled):not(.readonly) .cell:active {
-		box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.65);
+	.control:not(.disabled):not(.readonly) .cell:active,
+	.control:not(.disabled):not(.readonly) .cell.keyboard-pressed {
+		box-shadow: var(--shadow-pressed);
 	}
 
-	.control:not(.disabled):not(.readonly) .cell.selected:active {
+	.control:not(.disabled):not(.readonly) .cell.selected:active,
+	.control:not(.disabled):not(.readonly) .cell.selected.keyboard-pressed {
 		box-shadow:
-			inset 0 3px 5px rgba(0, 0, 0, 0.65),
+			var(--shadow-pressed),
 			inset 0 0 8px color-mix(in srgb, currentColor 35%, transparent);
 	}
 

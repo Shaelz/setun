@@ -449,7 +449,7 @@
 			radial-gradient(ellipse 130% 110% at 50% 45%, rgba(255, 255, 255, 0.13), transparent 78%),
 			radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.4) 100%);
 		border: 1px solid var(--line);
-		border-top-color: var(--edge);
+		box-shadow: var(--shadow-raised);
 		border-radius: 2px;
 		margin-block: 0;
 	}
@@ -519,7 +519,8 @@
 		align-self: flex-start;
 		margin-left: 6.5rem;
 		border: 1px solid var(--line);
-		background: var(--panel-2);
+		background: var(--panel-1);
+		box-shadow: var(--shadow-raised);
 		color: var(--text);
 		font-family: var(--font-label);
 		text-transform: uppercase;
@@ -531,11 +532,17 @@
 		cursor: pointer;
 		transition:
 			opacity 160ms var(--ease-settle),
-			border-color 160ms var(--ease-settle);
+			border-color 160ms var(--ease-settle),
+			box-shadow 160ms var(--ease-settle);
 	}
 
 	.copy-button:hover:not(:disabled) {
-		border-color: var(--edge);
+		border-color: var(--line);
+	}
+
+	.copy-button:active:not(:disabled) {
+		background: var(--panel-2);
+		box-shadow: var(--shadow-pressed);
 	}
 
 	.copy-button:focus-visible {
@@ -552,6 +559,16 @@
 		.copy-button {
 			align-self: center;
 			margin-left: 0;
+		}
+
+		.mode-row {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 0.5rem;
+		}
+
+		.mode-row .label {
+			width: auto;
 		}
 
 		/* Two full-size trit controls (~136px each) need real headroom at
@@ -590,10 +607,8 @@
 		border-radius: 2px;
 		color: var(--text);
 		font-variant-numeric: tabular-nums;
-		box-shadow:
-			inset 0 2px 4px rgba(0, 0, 0, 0.5),
-			inset 0 -1px rgba(255, 255, 255, 0.025);
-		text-shadow: 0 0 4px rgba(217, 215, 203, 0.12);
+		box-shadow: var(--shadow-recessed);
+		text-shadow: var(--glow-readout);
 	}
 
 	.status {
@@ -621,7 +636,8 @@
 	.guided-button {
 		appearance: none;
 		border: 1px solid var(--line);
-		background: var(--panel-2);
+		background: var(--panel-1);
+		box-shadow: var(--shadow-raised);
 		color: var(--label);
 		font-family: var(--font-label);
 		text-transform: uppercase;
@@ -633,12 +649,18 @@
 		cursor: pointer;
 		transition:
 			color 160ms var(--ease-settle),
-			border-color 160ms var(--ease-settle);
+			border-color 160ms var(--ease-settle),
+			box-shadow 160ms var(--ease-settle);
 	}
 
 	.guided-button:hover {
 		color: var(--text);
-		border-color: var(--edge);
+		border-color: var(--line);
+	}
+
+	.guided-button:active {
+		background: var(--panel-2);
+		box-shadow: var(--shadow-pressed);
 	}
 
 	.guided-button:focus-visible {

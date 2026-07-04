@@ -25,6 +25,11 @@
 	--panel-2: #0c0e0c; /* inset wells: trit tracks, display windows */
 	--line: #2b2f2a; /* hairline borders and panel rules */
 	--edge: rgba(255, 255, 255, 0.06); /* machined-edge catch on raised surfaces */
+	--reflection: rgba(255, 255, 255, 0.025); /* lower rim inside a top-lit recess */
+	--shadow-raised: inset 0 1px 0 var(--edge);
+	--shadow-recessed: inset 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 -1px var(--reflection);
+	--shadow-pressed: inset 0 3px 5px rgba(0, 0, 0, 0.65), inset 0 -1px var(--reflection);
+	--glow-readout: 0 0 4px rgba(217, 215, 203, 0.12);
 
 	/* Text */
 	--label: #8f9188; /* engraved section labels */

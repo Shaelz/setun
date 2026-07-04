@@ -17,6 +17,14 @@ test('keyboard changes a trit', async ({ page }) => {
 	await trit.press('ArrowLeft');
 	await trit.press('ArrowLeft');
 	await expect(trit).toHaveAttribute('aria-valuenow', '-1');
+
+	const beforePress = await trit.boundingBox();
+	await page.keyboard.down('0');
+	await expect(trit.locator('.cell.keyboard-pressed')).toHaveText('0');
+	await expect(trit).toHaveAttribute('aria-valuenow', '0');
+	await expect.poll(() => trit.boundingBox()).toEqual(beforePress);
+	await page.keyboard.up('0');
+	await expect(trit.locator('.cell.keyboard-pressed')).toHaveCount(0);
 });
 
 test('switching between binary and unary modes mutes and restores Input B', async ({ page }) => {

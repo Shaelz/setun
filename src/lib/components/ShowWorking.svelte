@@ -227,6 +227,7 @@
 		border: 1px solid var(--line);
 		border-radius: 2px;
 		background: var(--panel-2);
+		box-shadow: var(--shadow-recessed);
 		color: var(--label);
 	}
 
@@ -375,6 +376,7 @@
 		align-self: flex-start;
 		border: 1px solid var(--line);
 		background: var(--panel-1);
+		box-shadow: var(--shadow-raised);
 		color: var(--text);
 		font-family: var(--font-label);
 		text-transform: uppercase;
@@ -386,11 +388,17 @@
 		cursor: pointer;
 		transition:
 			opacity 160ms var(--ease-settle),
-			border-color 160ms var(--ease-settle);
+			border-color 160ms var(--ease-settle),
+			box-shadow 160ms var(--ease-settle);
 	}
 
 	.replay-button:hover {
-		border-color: var(--edge);
+		border-color: var(--line);
+	}
+
+	.replay-button:active {
+		background: var(--panel-2);
+		box-shadow: var(--shadow-pressed);
 	}
 
 	.replay-button:focus-visible {

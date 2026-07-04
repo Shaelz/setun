@@ -56,9 +56,9 @@
 	.logic-readout {
 		margin-left: 6.5rem;
 		border: 1px solid var(--line);
-		border-top-color: var(--edge);
 		border-radius: 2px;
 		background: var(--panel-2);
+		box-shadow: var(--shadow-recessed);
 		min-width: 0;
 	}
 

@@ -75,6 +75,14 @@ The panel ramp leans **grey-green** — the enamel of period lab equipment — r
   --panel-2: #0c0e0c;  /* inset wells: trit tracks, display windows */
   --line:    #2b2f2a;  /* hairline borders and panel rules */
   --edge:    rgba(255, 255, 255, 0.06);  /* 1px machined-edge catch on raised surfaces */
+  --reflection: rgba(255, 255, 255, 0.025);  /* lower rim inside a top-lit recess */
+
+  /* One fixed top-light model */
+  --shadow-raised: inset 0 1px 0 var(--edge);
+  --shadow-recessed: inset 0 2px 4px rgba(0, 0, 0, 0.5),
+                     inset 0 -1px var(--reflection);
+  --shadow-pressed: inset 0 3px 5px rgba(0, 0, 0, 0.65),
+                    inset 0 -1px var(--reflection);
 
   /* Text */
   --label:   #8f9188;  /* engraved section labels: INPUT A, MODE, STATUS, … */
@@ -150,9 +158,10 @@ A wide instrument panel, not a card-based web app:
 
 A physical instrument's most basic visual fact: things are recessed *into* the panel or raised *out of* it.
 
-- **Raised surfaces** (`--panel-1` modules): 1px `--line` border plus a 1px `--edge` catch on the top edge — a machined highlight, not a drop shadow.
-- **Inset wells** (`--panel-2`): trit tracks and display windows sit visibly *in* the panel — subtle inner shadow at the top, slightly darker fill. The decimal readout is a recessed display window, darker than the panel around it, its digits faintly luminous.
-- **Implemented -- touch response:** pressing an editable trit briefly deepens its inset shadow without moving the control or its surrounding layout.
+- **Raised enamel** (`--panel-1`, `--shadow-raised`): the casing and unselected physical buttons use a 1px `--line` border with a top `--edge` catch. No drop shadow, bottom highlight, or floating elevation.
+- **Recessed well** (`--panel-2`, `--shadow-recessed`): trit tracks, selected/latching keys, disclosure panels, and logic tables use a dark top inner shadow with a faint lower reflection.
+- **Illuminated aperture** (`--panel-2`, `--shadow-recessed`, restrained glow): decimal and computed readouts use the same recess geometry, adding light only to the information being emitted.
+- **Implemented -- pressure response:** pointer presses on any physical button and keyboard presses on trit controls temporarily use `--shadow-pressed`; editable trits preserve their state-color glow above that pressure shadow. Press feedback never moves the control or its surrounding layout.
 - **Implemented — texture budget:** a fixed SVG grain and room vignette behind the interface, plus a vignette scoped to the panel itself — a soft highlight above center fading to a darker edge at the panel's own bounds, as light falling on a physical object rather than a viewport-relative overlay. The atmospheric layer never sits over labels, controls, or readouts. That is the whole budget: **no** directional brushed-metal highlights, scanlines, scratches, or rust.
 - **Corner radius 2px maximum.** Machined edges, not rounded candy.
 - **Glow reads as lamp, not neon**: at most a soft halo of the trit's own color at low alpha (~25%, blur ≤ 6px) on an *active* lamp. Never on layout, never stacked.

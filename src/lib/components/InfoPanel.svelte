@@ -20,6 +20,7 @@
 		border: 1px solid var(--line);
 		border-radius: 2px;
 		background: var(--panel-2);
+		box-shadow: var(--shadow-recessed);
 		color: var(--label);
 	}
 

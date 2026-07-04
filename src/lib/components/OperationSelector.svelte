@@ -113,6 +113,7 @@
 		appearance: none;
 		border: 1px solid var(--line);
 		background: var(--panel-1);
+		box-shadow: var(--shadow-raised);
 		color: var(--label);
 		font-family: var(--font-label);
 		text-transform: uppercase;
@@ -126,12 +127,13 @@
 		transition:
 			background-color 160ms var(--ease-settle),
 			color 160ms var(--ease-settle),
-			border-color 160ms var(--ease-settle);
+			border-color 160ms var(--ease-settle),
+			box-shadow 160ms var(--ease-settle);
 	}
 
 	.option:hover {
 		color: var(--text);
-		border-color: var(--edge);
+		border-color: var(--line);
 	}
 
 	.option:focus-visible {
@@ -143,6 +145,12 @@
 		background: var(--panel-2);
 		color: var(--text);
 		border-color: var(--text);
+		box-shadow: var(--shadow-recessed);
+	}
+
+	.option:active {
+		background: var(--panel-2);
+		box-shadow: var(--shadow-pressed);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
