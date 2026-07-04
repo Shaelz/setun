@@ -101,7 +101,8 @@
 	.preset-buttons {
 		min-width: 0;
 		overflow-x: auto;
-		padding: 2px 2px 4px;
+		overflow-y: hidden;
+		padding: 4px;
 	}
 
 	button {
