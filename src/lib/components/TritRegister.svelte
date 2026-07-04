@@ -48,7 +48,7 @@
 	<div class="row">
 		{#each value as _, i (i)}
 			<TritControl
-				bind:value={value[i]}
+				value={value[i]}
 				label={`${label}${muted ? ', unused in current mode' : ''}, trit ${i + 1} of ${width}`}
 				positionLabel={`3${SUPERSCRIPT[width - 1 - i] ?? ''}`}
 				{readonly}
@@ -56,7 +56,10 @@
 				{emphasized}
 				traceChanged={traceChangedIndices.includes(i)}
 				traceActive={activeTraceIndex === i}
-				onchange={() => onchange?.(i)}
+				onchange={(next) => {
+					value[i] = next;
+					onchange?.(i);
+				}}
 			/>
 		{/each}
 	</div>
