@@ -155,3 +155,32 @@ export function incrementBalancedTernary(a: TritRegister): RegisterResult {
 export function decrementBalancedTernary(a: TritRegister): RegisterResult {
 	return subtractBalancedTernary(a, unitRegister(a.length));
 }
+
+export interface ShiftResult {
+	trits: TritRegister;
+	/** The 3⁰ trit dropped by the shift. */
+	droppedTrit: Trit;
+	roundedDecimal: number;
+	/** What a binary-style floor-toward-negative-infinity shift would give,
+	 * for contrast — balanced ternary's centered digits round instead. */
+	flooredDecimal: number;
+}
+
+/**
+ * Drops the least significant trit and shifts the rest one position toward
+ * 3⁰, padding a 0 in at 3^(width-1). Because trits are centered on zero
+ * (−1, 0, +1), the dropped trit is already the exact rounding remainder —
+ * this is round(value / 3) to nearest integer, never a floor, and it needs
+ * no separate rounding step. Magnitude only shrinks, so this never overflows.
+ */
+export function shiftRightBalancedTernary(a: TritRegister): ShiftResult {
+	const width = a.length;
+	const droppedTrit = a[width - 1];
+	const trits: Trit[] = [0, ...a.slice(0, width - 1)];
+	return {
+		trits,
+		droppedTrit,
+		roundedDecimal: balancedTernaryToDecimal(trits),
+		flooredDecimal: Math.floor(balancedTernaryToDecimal(a) / 3)
+	};
+}

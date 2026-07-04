@@ -4,6 +4,7 @@
 	import LogicReadout from '$lib/components/LogicReadout.svelte';
 	import PresetBank from '$lib/components/PresetBank.svelte';
 	import ShowWorking from '$lib/components/ShowWorking.svelte';
+	import TritControl from '$lib/components/TritControl.svelte';
 	import TritRegister from '$lib/components/TritRegister.svelte';
 	import OperationSelector, {
 		LOGIC_MODES,
@@ -17,6 +18,7 @@
 		incrementBalancedTernary,
 		multiplyBalancedTernary,
 		negateBalancedTernary,
+		shiftRightBalancedTernary,
 		subtractBalancedTernary,
 		type RegisterResult,
 		type NormalizationTrace,
@@ -24,7 +26,7 @@
 		type TritRegister as TritRegisterValue
 	} from '$lib/ternary/balancedTernary';
 	import { presetRegister, type PresetId } from '$lib/ternary/presets';
-	import { ternaryAnd, ternaryNot, ternaryOr } from '$lib/ternary/ternaryLogic';
+	import { compareBalancedTernary, ternaryAnd, ternaryNot, ternaryOr } from '$lib/ternary/ternaryLogic';
 
 	const WIDTH = 6;
 	type LogicMode = Extract<Mode, 'TERNARY_AND' | 'TERNARY_OR' | 'TERNARY_NOT'>;
@@ -50,6 +52,13 @@
 	let isUnary = $derived(UNARY_MODES.has(mode));
 	let isLogic = $derived(LOGIC_MODES.has(mode));
 	let logicMode = $derived<LogicMode | null>(isLogic ? (mode as LogicMode) : null);
+	let isCompare = $derived(mode === 'COMPARE');
+
+	// Computed unconditionally (both are cheap, pure reads of a/b) so the
+	// result switch below, the ShowWorking narration props, and the status
+	// text all read the same value instead of recomputing it three times.
+	let shiftResult = $derived(shiftRightBalancedTernary(a));
+	let compareResult = $derived(compareBalancedTernary(a, b));
 
 	let result = $derived.by<RegisterResult>(() => {
 		switch (mode) {
@@ -69,6 +78,12 @@
 				return incrementBalancedTernary(a);
 			case 'DECREMENT':
 				return decrementBalancedTernary(a);
+			case 'SHIFT_RIGHT':
+				return {
+					trits: shiftResult.trits,
+					overflow: false,
+					trace: { changedIndices: [], carrySteps: [], overflowIndex: null, steps: [] }
+				};
 			case 'TERNARY_AND':
 				return {
 					trits: ternaryAnd(a, b),
@@ -87,6 +102,15 @@
 					overflow: false,
 					trace: { changedIndices: [], carrySteps: [], overflowIndex: null, steps: [] }
 				};
+			case 'COMPARE':
+				// Not a real six-trit register — the console shows a single
+				// outcome trit for this mode instead (see the template below).
+				// Padded to width so decimal/copy plumbing keeps its shape.
+				return {
+					trits: [0, 0, 0, 0, 0, compareResult.outcome],
+					overflow: false,
+					trace: { changedIndices: [], carrySteps: [], overflowIndex: null, steps: [] }
+				};
 			default: {
 				const exhaustive: never = mode;
 				throw new Error(`Unhandled mode: ${exhaustive}`);
@@ -97,6 +121,22 @@
 	let decimalA = $derived(balancedTernaryToDecimal(a));
 	let decimalB = $derived(balancedTernaryToDecimal(b));
 	let decimalResult = $derived(result.overflow ? null : balancedTernaryToDecimal(result.trits));
+
+	// Extra narration data for ShowWorking's SHR/CMP branches — neither goes
+	// through normalizeTrits, so there's no carry trace to describe them with.
+	let shiftInfo = $derived({
+		droppedTrit: shiftResult.droppedTrit,
+		before: decimalA,
+		after: shiftResult.roundedDecimal,
+		floored: shiftResult.flooredDecimal
+	});
+	let compareInfo = $derived({
+		resolvingPower:
+			compareResult.resolvingIndex === null ? null : WIDTH - 1 - compareResult.resolvingIndex,
+		digitA: compareResult.resolvingIndex === null ? (0 as Trit) : a[compareResult.resolvingIndex],
+		digitB: compareResult.resolvingIndex === null ? (0 as Trit) : b[compareResult.resolvingIndex],
+		outcome: compareResult.outcome
+	});
 
 	const SUPERSCRIPT = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶'];
 
@@ -174,12 +214,31 @@
 							: 'ORDERED NOT · −A';
 				return;
 			}
+			if (mode === 'SHIFT_RIGHT') {
+				if (traceTimer) clearTimeout(traceTimer);
+				visibleTrace = { changedIndices: [], carrySteps: [], overflowIndex: null, steps: [] };
+				activeTraceIndex = null;
+				statusText = 'SHR · ROUND(A ÷ 3)';
+				return;
+			}
+			if (isCompare) {
+				if (traceTimer) clearTimeout(traceTimer);
+				visibleTrace = { changedIndices: [], carrySteps: [], overflowIndex: null, steps: [] };
+				activeTraceIndex = null;
+				statusText =
+					compareResult.outcome === 0
+						? 'CMP · A EQUALS B'
+						: compareResult.outcome > 0
+							? 'CMP · A GREATER THAN B'
+							: 'CMP · A LESS THAN B';
+				return;
+			}
 			startTrace(result);
 		});
 	}
 
 	function copyResultToA() {
-		if (result.overflow) return;
+		if (result.overflow || isCompare) return;
 		a = [...result.trits];
 		traceAfterUpdate();
 	}
@@ -249,21 +308,49 @@
 			<LogicReadout {a} {b} result={result.trits} mode={logicMode} />
 		{/if}
 
-		<div class="result-row">
-			<TritRegister
-				value={result.trits}
-				label="Result"
-				readonly
-				emphasized
-				traceChangedIndices={visibleTrace.changedIndices}
-				{activeTraceIndex}
-			/>
-			<button type="button" class="copy-button" disabled={result.overflow} onclick={copyResultToA}>
-				RESULT → A
-			</button>
-		</div>
+		{#if isCompare}
+			<div class="compare-row">
+				<span class="label">ORDER</span>
+				<TritControl
+					value={compareResult.outcome}
+					label={`Comparison result, ${
+						compareResult.outcome === 0
+							? 'A equals B'
+							: compareResult.outcome > 0
+								? 'A greater than B'
+								: 'A less than B'
+					}`}
+					readonly
+					emphasized
+				/>
+				<span class="compare-text"
+					>{compareResult.outcome === 0 ? 'A = B' : compareResult.outcome > 0 ? 'A > B' : 'A < B'}</span
+				>
+			</div>
+		{:else}
+			<div class="result-row">
+				<TritRegister
+					value={result.trits}
+					label="Result"
+					readonly
+					emphasized
+					traceChangedIndices={visibleTrace.changedIndices}
+					{activeTraceIndex}
+				/>
+				<button type="button" class="copy-button" disabled={result.overflow} onclick={copyResultToA}>
+					RESULT → A
+				</button>
+			</div>
+		{/if}
 
-		<ShowWorking {mode} trace={result.trace} overflow={result.overflow} bind:open={showWorkingOpen} />
+		<ShowWorking
+			{mode}
+			trace={result.trace}
+			overflow={result.overflow}
+			shift={shiftInfo}
+			compare={compareInfo}
+			bind:open={showWorkingOpen}
+		/>
 
 		<div class="readout label">
 			<span class="readout-label">DECIMAL</span>
@@ -363,6 +450,25 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.6rem;
+	}
+
+	.compare-row {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.compare-row .label {
+		flex: 0 0 auto;
+		width: 5.5rem;
+	}
+
+	.compare-text {
+		font-family: var(--font-data);
+		font-size: 0.85rem;
+		letter-spacing: 0.06em;
+		color: var(--text);
 	}
 
 	.copy-button {

@@ -63,6 +63,10 @@ leaves thinking: **"Oh. Binary is not inevitable."**
 - A "SHOW WORKING" disclosure under the result register, walking ADD, SUB, INC,
   and DEC through per-position sums, carries, and borrows in plain language,
   with a replay of the same pace as the live carry pulse
+- SHR (right shift), demonstrating that dropping the lowest trit rounds to the
+  nearest integer rather than flooring, because trits are centered on zero
+- CMP (comparison), reducing a whole-register comparison to a single `- 0 +`
+  outcome trit, using the same `- < 0 < +` order as the logic modes
 - Registers that stay fully visible at narrow widths: a 2-column grid of all
   six trits rather than a horizontally scrolling row
 - A `GUIDED: 1 + 1 CARRY` control that loads the canonical example, selects
@@ -102,9 +106,15 @@ show the corresponding powers of three, from `3^5` through `3^0`.
 | NEG | `-A` |
 | INC | `A + 1` |
 | DEC | `A - 1` |
+| SHR | drop A's `3^0` trit, shift the rest toward `3^0` |
 
 Unary operations mute Input B because it is not used. Results outside the
 six-trit range display an explicit overflow state and cannot be copied back to A.
+
+SHR never overflows (magnitude only shrinks), and it rounds to the nearest
+integer rather than flooring: `8 -> 3`, not `2`, because the dropped trit is
+already the exact rounding remainder when digits are centered on zero. A
+binary right shift has no equivalent free lunch — it floors.
 
 ### Ordered ternary logic
 
@@ -119,12 +129,24 @@ NOT = -A
 These operations run independently at every trit position. This is one useful
 ternary logic system, not the only possible one.
 
+### Comparison
+
+CMP compares Input A and Input B most-significant-trit first and stops at the
+first position where they differ — the same `- < 0 < +` order the logic modes
+use. The result is a single outcome trit, shown in place of the six-trit
+result register: `-` means A is less than B, `0` means they're equal, `+`
+means A is greater. Negative and positive values need no special-casing: a
+trit's position in `- < 0 < +` already encodes its sign correctly at every
+digit, unlike comparing raw two's-complement bit patterns.
+
 ## Current limitations
 
-- The "SHOW WORKING" walkthrough covers ADD, SUB, INC, and DEC. MULTIPLY still
-  produces the same trace data, but its per-position sum is a convolution, not
-  a simple two-input add, so it is not narrated yet rather than narrated
-  incorrectly. NEGATE and the ordered-logic modes never produce a trace.
+- The "SHOW WORKING" per-position table covers ADD, SUB, INC, and DEC; SHR and
+  CMP get their own dedicated explanations instead, since neither produces a
+  carry trace. MULTIPLY produces the same trace data as ADD/SUB/INC/DEC, but
+  its per-position sum is a convolution, not a simple two-input add, so it is
+  not narrated yet rather than narrated incorrectly. NEGATE and the
+  ordered-logic modes never produce a trace or a dedicated explanation.
 - Reduced-motion behavior has been checked manually. Keyboard interaction,
   mode switching, overflow, chaining, and mobile reachability now have
   automated browser coverage instead (`npm run test:e2e`).

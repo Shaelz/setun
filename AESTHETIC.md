@@ -130,7 +130,7 @@ A wide instrument panel, not a card-based web app:
 │                                                                  │
 │ LOAD        [ A ] [ B ]  ZERO ONE NEG ONE EIGHT … RANDOM         │
 │                                                                  │
-│ MODE        [ ADD ] [ SUB ] [ MUL ] [ NEG ] [ INC ] [ DEC ] [ AND ] [ OR ] [ NOT ] │
+│ MODE        [ ADD ][ SUB ][ MUL ][ NEG ][ INC ][ DEC ][ SHR ][ AND ][ OR ][ NOT ][ CMP ] │
 │                                                                  │
 │ RESULT      [ + | − | 0 | + | 0 | − ]        [ RESULT → A ]      │
 │                                                                  │

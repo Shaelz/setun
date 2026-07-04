@@ -6,9 +6,11 @@
 		| 'NEGATE'
 		| 'INCREMENT'
 		| 'DECREMENT'
+		| 'SHIFT_RIGHT'
 		| 'TERNARY_AND'
 		| 'TERNARY_OR'
-		| 'TERNARY_NOT';
+		| 'TERNARY_NOT'
+		| 'COMPARE';
 
 	export const MODES: { id: Mode; label: string }[] = [
 		{ id: 'ADD', label: 'ADD' },
@@ -17,9 +19,11 @@
 		{ id: 'NEGATE', label: 'NEG' },
 		{ id: 'INCREMENT', label: 'INC' },
 		{ id: 'DECREMENT', label: 'DEC' },
+		{ id: 'SHIFT_RIGHT', label: 'SHR' },
 		{ id: 'TERNARY_AND', label: 'AND' },
 		{ id: 'TERNARY_OR', label: 'OR' },
-		{ id: 'TERNARY_NOT', label: 'NOT' }
+		{ id: 'TERNARY_NOT', label: 'NOT' },
+		{ id: 'COMPARE', label: 'CMP' }
 	];
 
 	/** Modes that read only Input A — Input B is unused and gets visually muted. */
@@ -27,6 +31,7 @@
 		'NEGATE',
 		'INCREMENT',
 		'DECREMENT',
+		'SHIFT_RIGHT',
 		'TERNARY_NOT'
 	]);
 

@@ -8,6 +8,7 @@ import {
 	multiplyBalancedTernary,
 	negateBalancedTernary,
 	normalizeTrits,
+	shiftRightBalancedTernary,
 	subtractBalancedTernary,
 	type TritRegister
 } from './balancedTernary';
@@ -249,5 +250,33 @@ describe('per-position steps (show-working data)', () => {
 			digit: 1,
 			carryOut: 0
 		});
+	});
+});
+
+describe('shiftRightBalancedTernary', () => {
+	it('rounds to nearest rather than flooring (8 / 3 -> 3, not 2)', () => {
+		const result = shiftRightBalancedTernary(reg(8));
+		expect(result.roundedDecimal).toBe(3);
+		expect(result.flooredDecimal).toBe(2);
+		expect(result.droppedTrit).toBe(-1);
+	});
+
+	it('rounds a negative value toward nearest, not toward -Infinity', () => {
+		const result = shiftRightBalancedTernary(reg(-4));
+		expect(result.roundedDecimal).toBe(-1);
+		expect(result.flooredDecimal).toBe(-2);
+		expect(result.droppedTrit).toBe(-1);
+	});
+
+	it('agrees with floor when the value divides evenly', () => {
+		const result = shiftRightBalancedTernary(reg(-6));
+		expect(result.roundedDecimal).toBe(-2);
+		expect(result.flooredDecimal).toBe(-2);
+		expect(result.droppedTrit).toBe(0);
+	});
+
+	it('never overflows, since magnitude only shrinks', () => {
+		const result = shiftRightBalancedTernary(reg(364));
+		expect(balancedTernaryToDecimal(result.trits)).toBe(121);
 	});
 });

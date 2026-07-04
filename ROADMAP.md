@@ -154,11 +154,26 @@ intentional public component exhibit rather than remove it.
 
 ## Candidate follow-up work
 
-These items may follow the comprehension pass if they reinforce the product
-hypothesis:
+Two items from this list have shipped:
 
-- A right-shift and truncation demonstration showing round-to-nearest behavior
-- Comparison operations as an explanation of balanced ordering
+- **Right-shift and truncation demonstration — shipped.** SHR drops A's `3⁰`
+  trit and shifts the rest toward `3⁰`. Because trits are centered on zero,
+  the dropped trit is already the exact rounding remainder: `8 -> 3`, not the
+  `2` a floor-based binary shift would give. Never overflows, since magnitude
+  only shrinks. SHOW WORKING states both values and the floor contrast
+  explicitly, only when they actually differ.
+- **Comparison operations — shipped.** CMP compares A and B most-significant-
+  trit first using the same `- < 0 < +` order as AND/OR/NOT, stopping at the
+  first difference. The six-trit result register doesn't fit a three-outcome
+  comparison honestly, so CMP shows a single outcome trit instead
+  (`-`/`0`/`+` for less/equal/greater) — reusing `TritControl` directly rather
+  than padding a six-trit register with meaningless zeros. `RESULT -> A` is
+  hidden for this mode; copying a bare ordering trit into all of A isn't a
+  meaningful chained action, unlike SHR (repeated SHR is a legitimate,
+  demonstrative chain).
+
+These items may still follow if they reinforce the product hypothesis:
+
 - A second ternary logic system, presented explicitly as a comparison
 - Configurable register width when a specific demonstration requires it
 

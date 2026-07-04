@@ -9,9 +9,14 @@
 		/** Bindable so the console can open this on demand (e.g. the guided
 		 * experiment) without a second click; native toggling still works. */
 		open?: boolean;
+		/** SHR doesn't go through normalizeTrits — nothing to carry-trace. */
+		shift?: { droppedTrit: Trit; before: number; after: number; floored: number };
+		/** CMP doesn't go through normalizeTrits either — it's a structural
+		 * walk over A and B, not an arithmetic pass. */
+		compare?: { resolvingPower: number | null; digitA: Trit; digitB: Trit; outcome: Trit };
 	}
 
-	let { mode, trace, overflow, open = $bindable(false) }: Props = $props();
+	let { mode, trace, overflow, open = $bindable(false), shift, compare }: Props = $props();
 
 	/** These four reduce to the same per-position "trit + trit (+ carry-in)"
 	 * quantity before normalization runs — SUB negates B first, DEC subtracts
@@ -23,8 +28,16 @@
 		'DECREMENT'
 	]);
 
-	let narration = $derived<'stepped' | 'multiply' | 'none'>(
-		STEPPED_MODES.has(mode) ? 'stepped' : mode === 'MULTIPLY' ? 'multiply' : 'none'
+	let narration = $derived<'stepped' | 'multiply' | 'shift' | 'compare' | 'none'>(
+		STEPPED_MODES.has(mode)
+			? 'stepped'
+			: mode === 'MULTIPLY'
+				? 'multiply'
+				: mode === 'SHIFT_RIGHT'
+					? 'shift'
+					: mode === 'COMPARE'
+						? 'compare'
+						: 'none'
 	);
 	let modeLabel = $derived(MODES.find((m) => m.id === mode)?.label ?? mode);
 
@@ -127,6 +140,35 @@
 			<p class="note">
 				Step detail isn't written for {modeLabel} yet. The result above is still correct.
 			</p>
+		{:else if narration === 'shift'}
+			<p class="note">
+				Dropping 3⁰ ({SYMBOL[shift?.droppedTrit ?? 0]}) and shifting the rest one position toward
+				3⁰ turns {shift?.before} into {shift?.after} — round({shift?.before} ÷ 3), not floor.
+				Trits are centered on zero, so the dropped trit is already the exact rounding remainder;
+				no separate rounding step is needed.
+			</p>
+			<p class="note">
+				A binary-style floor shift would give {shift?.floored}{shift?.floored === shift?.after
+					? ' — the same value here.'
+					: ', which is different: floor always rounds toward −∞, this rounds to nearest.'}
+			</p>
+		{:else if narration === 'compare'}
+			{#if compare?.resolvingPower == null}
+				<p class="note">
+					Every position matches — A equals B. The same − &lt; 0 &lt; + order that compares a
+					single trit compares whole registers too, most significant trit first, with no
+					separate sign check.
+				</p>
+			{:else}
+				<p class="note">
+					The first difference is at {powerLabel(compare.resolvingPower)}: A has
+					{SYMBOL[compare.digitA]}, B has {SYMBOL[compare.digitB]}. In − &lt; 0 &lt; +,
+					{SYMBOL[compare.digitA]} is {compare.outcome > 0 ? 'ordered after' : 'ordered before'}
+					{SYMBOL[compare.digitB]}, so A is {compare.outcome > 0 ? 'greater than' : 'less than'} B
+					— decided the moment the registers first disagree, with no special-casing for negative
+					values.
+				</p>
+			{/if}
 		{:else if !hasNormalization}
 			<p class="note">No carry or borrow — every position matched a single trit exactly.</p>
 		{:else}
