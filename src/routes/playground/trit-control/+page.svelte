@@ -18,13 +18,15 @@
 </script>
 
 <svelte:head>
-	<title>Trit control — playground</title>
+	<title>Trit control — component exhibit</title>
+	<meta name="description" content="The TRIT//-0+ three-position trit control, shown in isolation." />
 </svelte:head>
 
 <main>
 	<header>
 		<h1>TRIT CONTROL</h1>
-		<p class="label">ISOLATED COMPONENT PLAYGROUND — NOT THE FULL CONSOLE</p>
+		<p class="label">COMPONENT EXHIBIT — THE CONTROL, ISOLATED FROM THE FULL CONSOLE</p>
+		<a class="back-link" href="/">← REGISTER CONSOLE</a>
 	</header>
 
 	<section>
@@ -72,6 +74,28 @@
 
 	header {
 		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
+	.back-link {
+		font-family: var(--font-label);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.7rem;
+		color: var(--label);
+		text-decoration: none;
+	}
+
+	.back-link:hover {
+		color: var(--text);
+	}
+
+	.back-link:focus-visible {
+		outline: 1px solid var(--focus);
+		outline-offset: 2px;
 	}
 
 	h1 {

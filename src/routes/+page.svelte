@@ -271,6 +271,10 @@
 		</div>
 
 		<InfoPanel />
+
+		<footer>
+			<a class="exhibit-link" href="/playground/trit-control">COMPONENT EXHIBIT: TRIT CONTROL →</a>
+		</footer>
 	</div>
 </main>
 
@@ -402,6 +406,31 @@
 
 	.status.overflow {
 		color: var(--overflow);
+	}
+
+	footer {
+		display: flex;
+		justify-content: flex-end;
+		padding-top: 0.5rem;
+		border-top: 1px solid var(--line);
+	}
+
+	.exhibit-link {
+		font-family: var(--font-label);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.7rem;
+		color: var(--label);
+		text-decoration: none;
+	}
+
+	.exhibit-link:hover {
+		color: var(--text);
+	}
+
+	.exhibit-link:focus-visible {
+		outline: 1px solid var(--focus);
+		outline-offset: 2px;
 	}
 
 	@media (min-height: 50rem) {

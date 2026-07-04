@@ -110,23 +110,19 @@ Add a small browser smoke suite covering only high-value behavior:
 
 Do not pursue exhaustive UI coverage or screenshot-test every visual detail.
 
-### 5. Resolve the public playground route
+### 5. Public playground route — resolved
 
-`/playground/trit-control` is currently prerendered into the production build even
-though it began as an isolated development surface. Make one explicit decision:
+`/playground/trit-control` began as an isolated development surface but was
+prerendered into the production build by accident. Decision: keep it, as an
+intentional public component exhibit rather than remove it.
 
-- Keep it as an intentional public component exhibit, give it appropriate page
-  context, and link to it deliberately; or
-- Exclude or remove it from the production build while preserving any useful
-  local component-development workflow.
-
-**Acceptance criteria**
-
-- The route is no longer public by accident.
-- README.md describes the chosen behavior rather than an unresolved ambiguity.
-- Production-build verification confirms whether the route is included or absent.
-- The decision does not introduce a component-workbench framework solely to
-  preserve one playground page.
+- The page now carries its own context (`COMPONENT EXHIBIT — THE CONTROL,
+  ISOLATED FROM THE FULL CONSOLE`) instead of reading as a leftover.
+- The main console links to it from a footer line, and the exhibit links back
+  to the console, so the route is reached deliberately rather than by accident.
+- No component-workbench framework was introduced; the page remains a single
+  plain SvelteKit route.
+- README.md describes this as shipped behavior rather than an open question.
 
 ## Candidate follow-up work
 

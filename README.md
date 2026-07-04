@@ -58,6 +58,8 @@ leaves thinking: **"Oh. Binary is not inevitable."**
 - Keyboard-accessible trit controls and operation selectors
 - Reduced-motion equivalents for carry feedback
 - Automated tests for arithmetic, normalization, overflow, logic, and presets
+- A linked component exhibit at `/playground/trit-control`, showing the trit
+  control in isolation from the full console
 
 ## Using the console
 
@@ -116,8 +118,6 @@ ternary logic system, not the only possible one.
   harder to understand as a whole. Mobile completion is therefore reopened.
 - Keyboard, reduced-motion, and responsive behavior have been checked manually;
   the automated suite currently covers the domain logic rather than browser flows.
-- The isolated trit-control playground remains available at
-  `/playground/trit-control`; whether it belongs in the public build is undecided.
 
 See [ROADMAP.md](ROADMAP.md) for the comprehension-first next milestone and
 [AESTHETIC.md](AESTHETIC.md) for the visual direction and implementation-status
@@ -152,7 +152,7 @@ src/
     components/    trit controls, registers, selectors, readouts, and reference UI
   routes/
     +page.svelte   the calculator and logic console
-    playground/    isolated trit-control development route
+    playground/    linked trit-control component exhibit
 ```
 
 Core values use these domain types:
