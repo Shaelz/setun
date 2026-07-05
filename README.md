@@ -217,3 +217,7 @@ integration.
 Those ideas may be interesting experiments, but they must not make the current
 web application more abstract or harder to maintain before they have a concrete
 user purpose.
+
+## License
+
+Setun is available under the [MIT License](LICENSE).

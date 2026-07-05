@@ -15,6 +15,10 @@ desktop.ini
 
 # Editors
 .idea/
+.vscode/
+.claude/
+.agents/
+.codex/
 *.suo
 *.user
 
