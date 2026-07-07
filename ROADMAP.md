@@ -1,5 +1,17 @@
 # Roadmap
 
+## Now
+
+Setun has completed its functional baseline and the mechanical comprehension
+pass, including SHOW WORKING, the guided carry experiment, the mobile register
+layout, and smoke coverage. The active question is now whether first-time users
+actually understand balanced-ternary normalization from that experience.
+
+## Next
+
+No accepted items yet. The follow-up ideas below remain candidates only until
+one is shown to strengthen the product hypothesis.
+
 ## Product direction
 
 Setun should become a small interactive balanced-ternary explainer disguised as
